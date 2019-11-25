@@ -1,0 +1,42 @@
+{% extends "../../base.html" %}
+
+{% block title %}
+  Admin
+{% endblock %}
+
+{% block css %}
+<style>
+</style>
+{% endblock %}
+
+{% block script %}
+  <script type="text/javascript">
+    App.module = '/admin/manage/';
+    {% include "./admin-manage-tenants.js" %}
+    {% include "./admin-manage-users.js" %}
+    {% include "./admin-manage-migrate.js" %}
+  </script>
+{% endblock %}
+
+{% block body %}
+  <div class="container-fluid">
+    <div id='mainPages'>
+      {% include "./admin-manage-navbar.html" %}
+      {% include "./admin-manage-tenants.html" %}
+      {% include "./admin-manage-users.html" %}
+      {% include "./admin-manage-migrate.html" %}
+      {% include "../../../mvc-addons/mvc-boot-cal.html" %}
+      {% include "../../../mvc-addons/mvc-boot-time.html" %}
+      {% include "../../../mvc-addons/mvc-modals.html" %}
+    </div>
+  </div>
+  
+  {% include "./admin-login.html" %}
+{% endblock %}
+
+{% block init %}
+<script type="text/javascript">
+  {% include "../../../lib/utils/object.js" %}
+  {% include "./admin-manage.js" %}
+</script>
+{% endblock %}

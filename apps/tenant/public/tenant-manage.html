@@ -1,0 +1,55 @@
+{% extends "../../base.html" %}
+
+{% block title %}
+  Payroll
+{% endblock %}
+
+{% block css %}
+<style>
+</style>
+{% endblock %}
+
+{% block script %}
+  <script type="text/javascript" src="https://static.roam3hosting.com/js/node/dymo.js"></script>
+
+  <script type="text/javascript">
+    App.module = '/tenant/manage/';
+    {% include "./tenant-manage-departments.js" %}
+    {% include "./tenant-manage-employees.js" %}
+    {% include "./tenant-manage-workcodes.js" %}
+    {% include "./tenant-manage-users.js" %}
+    {% include "./tenant-manage-payroll.js" %}
+    {% include "./tenant-manage-reports.js" %}
+  </script>
+{% endblock %}
+
+{% block body %}
+  <div class="container-fluid">
+    <div id='mainPages'>
+      {% include "./tenant-manage-navbar.html" %}
+      {% include "./tenant-manage-departments.html" %}
+      {% include "./tenant-manage-employees.html" %}
+      {% include "./tenant-manage-workcodes.html" %}
+      {% include "./tenant-manage-users.html" %}
+      {% include "./tenant-manage-payroll.html" %}
+      {% include "./tenant-manage-reports.html" %}
+      {% include "../../../mvc-addons/mvc-boot-cal.html" %}
+      {% include "../../../mvc-addons/mvc-boot-time.html" %}
+      {% include "../../../mvc-addons/mvc-modals.html" %}
+      {% include "../../../mvc-addons/mvc-share.html" %}
+    </div>
+  </div>
+  
+  {% include "./tenant-login.html" %}
+{% endblock %}
+
+{% block init %}
+<script type="text/javascript">
+  {% include "../../../lib/utils/object.js" %}
+  {% include "../../../lib/utils/nwio.js" %}
+  {% include "../../../lib/utils/download.js" %}
+  {% include "../../../lib/utils/export.js" %}
+  {% include "../../../lib/utils/ee.js" %}
+  {% include "./tenant-manage.js" %}
+</script>
+{% endblock %}

@@ -1,0 +1,106 @@
+<page id='tenant-manage-departments' style='display: none'>
+  <section id='tenant-manage-departments-section'>
+    <div class='row form-group justify-content-center'>
+      
+      <div class='col-12 col-sm-3 mb-4'>
+        <div class='card'>
+          <div class='card-header'>
+            <div class='row'>
+              <div class='col-8'>
+                {{ buttons.btnsm(class='success', mvc_click='newDept', text='+ New Department') }}
+              </div>
+            </div>          
+          </div>
+          
+          <div class='card-body'>
+            <div class='row'>
+              <div class='col-12'>
+                <select mvc-each='departments' mvc-value='deptPK' class='form-control' size='10' style='width: 100%'>
+                  <option mvc-option='{text: "departments[$index].name", value: "departments[$index].code"}'></option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class='col-12 col-sm-6'>
+        <div class='card'>
+          <div class='card-header'>
+            <div class='row'>
+              <div class='col-6 col-sm-3'>
+                {{ fields.Char(type='text', id=department.code.id, maxlength=department.code.maxLength, mvc_value='department.code', mvc_event_type='blur', mvc_disabled='this.$get("deptPK")', label=department.code.verbose) }}
+              </div>
+              
+              <div class='col-sm-1'></div>
+              
+              <div class='col-12 col-sm-4'>
+                {{ fields.Boolean(id=department.active.id, mvc_checked='department.active', label=department.active.verbose) }}
+              </div>
+            </div>          
+          </div>
+          
+          <div class='card-body'>
+            <div class='row form-group'>
+              <div class='col-sm-6'>
+                {{ fields.Char(type='text', id=department.name.id, maxlength=department.name.maxLength, mvc_value='department.name', label=department.name.verbose) }}
+              </div>
+            </div>
+            
+            <div class='row'>
+              <div class='col-12 col-sm-6'>
+                {{ fields.SelectMVC(id=department.mgr.id, size='10', mvc_value='department.mgr', mvc_each='employees', valueField='code', textField='name', label=department.mgr.verbose) }}
+              </div>
+              
+              <div class='col-12 col-sm-6'>
+                {{ fields.Password(type='password', id=department.password.id, maxlength=department.password.maxLength, mvc_value='department.password', label=department.password.verbose) }}
+              </div>          
+            </div>
+          </div>
+          
+          <div class='card-footer'>
+            <div class='row'>
+              <div class='col-12'>
+                <span mvc-hide='this.$get("deptPK")'>
+                  {{ buttons.btn(class='primary', mvc_click='save', text='Create') }}
+                </span>
+                <span mvc-show='this.$get("deptPK")'>
+                  {{ buttons.btn(class='primary', mvc_click='save', text='Update') }}
+                  {{ buttons.btn(class='danger', mvc_click='delete', text='Delete') }}
+                </span>
+                {{ buttons.btn(class='secondary', mvc_click='clear', text='Clear') }}
+              </div>
+            </div>            
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div aria-live="polite" aria-atomic="true" style="position: absolute; bottom: 5px; right: 0; z-index:20000">
+      <div style="position: absolute; bottom: 5px; right: 0; min-width: 350px">
+        <div class="toast" id="tenant-manage-departments-toast1" role="alert" aria-live="assertive" aria-atomic="true">
+          <div class="toast-header">
+            <strong class="mr-auto">TimeKeep</strong>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="toast-body">
+            <span mvc-text='toastMessage'></span>
+          </div>
+        </div>  
+      </div>
+    </div>
+  </section>
+  
+  <script>
+    (function() {
+      var page = $('#tenant-manage-departments');
+      var section = $('#tenant-manage-departments-section');
+      var path = '/departments';
+      var title = 'Payroll';
+
+      App.mvcs[section[0].id] = {mvcObj: App.mvcObjs.tenant_manage_departments, page: page, section: section, path: path, title: title};
+    })();
+  </script>
+</page>

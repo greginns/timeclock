@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang=en style='height: 100%'>
+  <head>
+    <title>
+      {% block title %}No Name{% endblock %}
+    </title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://static.roam3hosting.com/css/node/bootstrap-labels.css">    
+    <link rel="stylesheet" href="https://static.roam3hosting.com/css/node/app.css">
+    <link rel="stylesheet" href="https://static.roam3hosting.com/css/node/mvc-addons.css">
+    <!--link rel="stylesheet" href="https://static.roam3hosting.com/css/v31/monokai-sublime.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote-bs4.css"-->
+
+    {% block css %}
+    <style type="text/css">
+    </style>
+    {% endblock %}
+    
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.3.7/js/tether.min.js" integrity="sha384-XTs3FgkjiBgo8qjEjBk0tGmf3wPrWtA6coPfQDfFEY8AnYJwjalXCiosYRBIBZX8" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>    
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.15/lodash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js"></script>
+    <!--script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote-bs4.js"></script-->
+    
+    <script type="text/javascript" src="https://static.roam3hosting.com/js/node/mvc.js"></script>
+    <script type="text/javascript" src="https://static.roam3hosting.com/js/node/router.js"></script>
+    <!--script type="text/javascript" src="https://static.roam3hosting.com/js/v31/q2.js"></script-->
+
+    <script type="text/javascript">
+      window.name = (new Date()).valueOf();
+      {% include './app.js' %}
+      {% include './iofetch.js' %}
+    </script>
+
+    {% block script %}
+    {% endblock %}
+
+  </head>
+  <body style='background-color: #eeeeee; height: 100%; margin: 0px;'>
+    {% import "fields.html" as fields %}
+    {% import "buttons.html" as buttons %}
+
+    {% block body %}
+      Uh Oh, Body didn't load.
+    {% endblock %}
+
+    {% block init %}
+    {% endblock %}
+  </body>
+</html>

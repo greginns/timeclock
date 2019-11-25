@@ -1,0 +1,75 @@
+<page id='tenant-empclock-clockin' style='display: none'>
+  <section id='tenant-empclock-clockin-section'>
+    <div mvc-show='this.$get("loggedIn")'>
+      <div class='row form-group'>
+        <div class='col-12 col-sm-4'>
+          <select id='empclock_workcode' mvc-value='workcode' mvc-each='empworks' class='form-control'>
+            <option mvc-option = '{text: "empworks[$index].Workcode.desc", value: "empworks[$index].workcode", "payrate": "empworks[$index].payrate"}'></option>
+          </select>
+        </div>
+        <div class='col-12 col-sm-4'>
+          {{ buttons.btn(class='primary', mvc_click='clockin', text='Clock In') }} 
+        </div>
+      </div>
+    
+      <div class='row form-group'>
+        <div class='col-12 col-sm-6'>
+          <table class='table table-sm'>
+            <thead>
+              <tr>
+                <th>
+                  Clock In
+                </th>
+                <th>
+                  Clock Out
+                </th>
+                <th>
+                  Hours
+                </th>
+                <!--th>
+                  Pay
+                </th-->
+                <th>
+                </th>
+              </tr>
+            </thead>
+            
+            <tbody mvc-each='works'>
+              <tr>
+                <td>
+                  <span mvc-text='works[$index].sdate'></span>
+                  <span mvc-text='works[$index].stime'></span>
+                </td>
+                <td>
+                  <span mvc-text='works[$index].edate'></span>
+                  <span mvc-text='works[$index].etime'></span>
+                </td>
+                <td>
+                  <span mvc-text='works[$index].hours'></span>
+                </td>
+                <!--td>
+                  <span mvc-text='works[$index].pay'></span>
+                </td-->
+                <td>
+                  <span mvc-text='works[$index].Workcode.desc'></span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    
+  </section>
+  
+  <script>
+    (function() {
+      var page = $('#tenant-empclock-clockin');
+      var section = $('#tenant-empclock-clockin-section');
+      var path = '/clockin';
+      var title = 'Clock In';
+
+      App.mvcs[section[0].id] = {mvcObj: App.mvcObjs.tenant_empclock_clockin, page: page, section: section, path: path, title: title};
+    })();
+  </script>
+</page>

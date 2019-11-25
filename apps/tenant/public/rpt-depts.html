@@ -1,0 +1,35 @@
+<table class='table table-sm'>
+  <thead>
+    <tr>
+      <th colspan='4' align='center'>
+        Departments
+      </th>
+    </tr>
+    
+    <tr>
+      <th>Dept Code</th>
+      <th>Dept Name</th>
+      <th>Manager</th>
+      <th>Active</th>
+    </tr>  
+  </thead>
+  
+  <tbody>
+    {% for dept in data %}
+      <tr>
+        <td>
+          {{dept.code}}
+        </td>
+        <td>
+          {{dept.name}}
+        </td>
+        <td>
+          {{dept.mgr}}
+        </td>
+        <td>
+          {{dept.active}}
+        </td>
+      </tr>
+    {% endfor %}        
+  </tbody>
+</table>

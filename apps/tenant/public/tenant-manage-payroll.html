@@ -1,0 +1,90 @@
+<page id='tenant-manage-payroll' style='display: none'>
+  <section id='tenant-manage-payroll-section'>
+    <div class='row'>
+      <div class='col-12'>
+        <div class="custom-control custom-radio custom-control-inline">
+          <input type="radio" id="stypec" name="stype" mvc-checked='stype' value='C' class="custom-control-input">
+          <label class="custom-control-label label-color" for="stypec">Print/Close Current Period</label>
+        </div>
+      </div>
+    </div>
+    
+    <div class='row form-group'>
+      <div class='col-12'>
+        <div class="custom-control custom-radio custom-control-inline">
+          <input type="radio" id="stypep" name="stype" mvc-checked='stype' value='P' class="custom-control-input">
+          <label class="custom-control-label label-color" for="stypep">Re-Print Past Period</label>
+        </div>
+      </div>
+    </div>
+    
+    <div class='row form-group'>
+      <div class='col-12 col-sm-6' mvc-show='this.$get("stype") == "C"'>
+        <div class='row form-group'>
+          <div class='col-12'>
+            Payroll Closeout <span mvc-text='startDate'></span> - <span mvc-text='endDate'></span>
+          </div>
+        </div>
+        
+        <div class='row form-group'>
+          <div class='col-3'>
+            {{ buttons.btn(class='primary', mvc_click='run', text='Run') }}
+          </div>
+          <div class='col-6' mvc-show='this.$get("showClose")'>
+            {{ buttons.btn(class='success', mvc_click='share', text='Share') }}
+            {{ buttons.btn(class='success', mvc_click='close', text='Close') }}
+          </div>
+        </div>        
+      </div>
+      
+      <div class='col-12 col-sm-6' mvc-show='this.$get("stype") == "P"'>
+        <div class='row form-group'>
+          <div class='col-12'>
+            Re-print Past Periods
+          </div>
+        </div>
+        <div class='row form-group'>
+          <div class='col-6'>
+            {{ fields.SelectMVC(id='payroll.pp', size='1', mvc_value='pastPP', mvc_each='pasts', valueField='id', textField='desc', label='Past Periods') }}
+          </div>
+          <div class='col-6' mvc-show='this.$get("pastPP")'>
+            {{ buttons.btn(class='primary', mvc_click='reprint', text='Share') }}
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class='row form-group'>
+      <div class='col-12'>
+        <span mvc-html='report'></span>
+      </div>
+    </div>
+    
+    <div aria-live="polite" aria-atomic="true" style="position: absolute; bottom: 5px; right: 0; z-index:20000">
+      <div style="position: absolute; bottom: 5px; right: 0; min-width: 350px">
+        <div class="toast" id="tenant-manage-payroll-toast1" role="alert" aria-live="assertive" aria-atomic="true">
+          <div class="toast-header">
+            <strong class="mr-auto">TimeKeep</strong>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="toast-body">
+            <span mvc-text='toastMessage'></span>
+          </div>
+        </div>  
+      </div>
+    </div>
+  </section>
+  
+  <script>
+    (function() {
+      var page = $('#tenant-manage-payroll');
+      var section = $('#tenant-manage-payroll-section');
+      var path = '/payroll';
+      var title = 'Payroll';
+
+      App.mvcs[section[0].id] = {mvcObj: App.mvcObjs.tenant_manage_payroll, page: page, section: section, path: path, title: title};
+    })();
+  </script>
+</page>

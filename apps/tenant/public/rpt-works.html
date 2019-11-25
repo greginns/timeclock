@@ -1,0 +1,39 @@
+<table class='table table-sm'>
+  <thead>
+    <tr>
+      <th colspan='5' align='center'>
+        Work Codes
+      </th>
+    </tr>
+    
+    <tr>
+      <th>Work Code</th>
+      <th>Description</th>
+      <th>Dept</th>
+      <th>Method</th>
+      <th>Active</th>
+    </tr>  
+  </thead>
+  
+  <tbody>
+    {% for work in data %}
+      <tr>
+        <td>
+          {{work.code}}
+        </td>
+        <td>
+          {{work.desc}}
+        </td>
+        <td>
+          {{work.dept}}
+        </td>
+        <td>
+          {{work.method}}
+        </td>
+        <td>
+          {{work.active}}
+        </td>
+      </tr>
+    {% endfor %}        
+  </tbody>
+</table>

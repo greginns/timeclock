@@ -1,0 +1,35 @@
+<table class='table table-sm'>
+  <thead>
+    <tr>
+      <th colspan='4' align='center'>
+        Employee Pay Rates
+      </th>
+    </tr>
+    
+    <tr>
+      <th>Dept</th>
+      <th>Employee</th>
+      <th>Work Code</th>
+      <th class='text-right'>Pay Rate</th>
+    </tr>  
+  </thead>
+  
+  <tbody>
+    {% for emp in data %}
+      <tr>
+        <td>
+          {{emp['Department.name']}}
+        </td>
+        <td>
+          {{emp['Employee.name']}}
+        </td>
+        <td>
+          {{emp['Workcode.desc']}}
+        </td>
+        <td class='text-right'>
+          {{emp.payrate}}
+        </td>
+      </tr>
+    {% endfor %}        
+  </tbody>
+</table>

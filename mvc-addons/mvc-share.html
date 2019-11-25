@@ -1,0 +1,314 @@
+<div id='mvc-share' class="modal fade" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          Share Report
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="container-fluid">
+          <nav>
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+              <a class="nav-item nav-link active" id="share-print-tab" data-toggle="tab" href="#share-print" role="tab" aria-controls="share-print" aria-selected="true">Print</a>
+              <a class="nav-item nav-link" id="share-download-tab" data-toggle="tab" href="#share-download" role="tab" aria-controls="share-download" aria-selected="false">Download</a>
+              <a class="nav-item nav-link" id="share-email-tab" data-toggle="tab" href="#share-email" role="tab" aria-controls="share-email" aria-selected="false">Email</a>
+            </div>
+          </nav>
+          
+          <div class="tab-content">
+            <div class="tab-pane fade show active" id="share-print" role="tabpanel" aria-labelledby="share-print-tab">
+              <br>
+              <div class='row form-group'>
+                <div class='col-12 col-sm-9'>
+                  {{ fields.SelectMVC(id='rptPrinters', size='1', mvc_value='printer', mvc_each='printers', valueField='printer', textField='printer', label='Printers') }}
+                </div>
+                <div class='col-12 col-sm-3' mvc-show='this.$get("printer")'>
+                  {{ buttons.btn(class='primary', mvc_click='print', text='Print') }}
+                </div>
+              </div>
+            </div>          
+
+            <div class="tab-pane fade" id="share-download" role="tabpanel" aria-labelledby="share-download-tab">
+              <br>
+              <div class='row form-group'>
+                <div class='col-12 col-sm-2'>
+                  <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" id="shareDLC" name="shareDL" mvc-checked='shareDL' value='C' class="custom-control-input">
+                    <label class="custom-control-label label-color" for="shareDLC">CSV</label>
+                  </div>
+                </div>
+                
+                <div class='col-12 col-sm-2'>
+                  <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" id="shareDLP" name="shareDL" mvc-checked='shareDL' value='P' class="custom-control-input">
+                    <label class="custom-control-label label-color" for="shareDLP">PDF</label>
+                  </div>
+                </div>
+                
+                <div class='col-3 col-sm-2'>
+                  {{ buttons.btn(class='primary', mvc_click='download', text='Download') }}
+                </div>
+              </div>
+            </div>          
+
+            <div class="tab-pane fade" id="share-email" role="tabpanel" aria-labelledby="share-email-tab">
+              <br>
+              <div class='row form-group'>
+                <div class='col-12'>
+                  <div class='form-label-group'>
+                      <input type='text' id='share-email-from' mvc-value='email.from' class='form-control' disabled>
+                      <label for='share-email-from'>From</label>
+                  </div>
+                  <!--span{{ fields.Char(type='text', id='share-email-from', maxlength='50', mvc_value='email.from', label='From') }}/span--> 
+                </div>
+              </div>
+               
+              <div class='row form-group'>
+                <div class='col-12'>
+                  {{ fields.Char(type='text', id='share-email-to', maxlength='50', mvc_value='email.to', label='To') }}                  
+                </div>
+              </div>
+              
+              <div class='row form-group'>
+                <div class='col-12'>
+                  {{ fields.Char(type='text', id='share-email-subject', maxlength='50', mvc_value='email.subject', label='Subject') }}
+                </div>
+              </div>
+              
+              <div class='row form-group'>
+                <div class='col-12 col-sm-2'>
+                  Attach:
+                </div>
+                
+                <div class='col-12 col-sm-2'>
+                  <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" id="shareEMC" name="shareEM" mvc-checked='email.share' value='C' class="custom-control-input">
+                    <label class="custom-control-label label-color" for="shareEMC">CSV</label>
+                  </div>
+                </div>
+                
+                <div class='col-12 col-sm-2'>
+                  <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" id="shareEMP" name="shareEM" mvc-checked='email.share' value='P' class="custom-control-input">
+                    <label class="custom-control-label label-color" for="shareEMP">PDF</label>
+                  </div>
+                </div>
+      
+                <div class='col-12 col-sm-2'>
+                  <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" id="shareEMH" name="shareEM" mvc-checked='email.share' value='H' class="custom-control-input">
+                    <label class="custom-control-label label-color" for="shareEMH">HTML</label>
+                  </div>
+                </div>                
+              </div>
+              
+              <div class='row form-group'>
+                <div class='col-12'>
+                  {{ fields.Text(id='share-email-message', rows='10', cols='40', mvc_value='email.message', label='Message') }}                  
+                </div>
+              </div>
+              
+              <div class='row form-group'>
+                <div class='col-12 col-sm-4'>
+                  {{ buttons.btn(class='primary', mvc_click='email', text='Send') }}
+                </div>
+              </div>
+            </div>          
+          </div>   
+                 
+        </div>
+      </div>
+
+      <div class='modal-footer'>
+        <span class='text-danger' mvc-text='error'></span>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  (function() {
+    var modal = $('#mvc-share');
+
+    var mvcObj = {
+      model: {
+        opts: {},
+        email: {share: 'C'},
+        shareDL: 'C',
+        errors: {email: {}},
+      },
+
+      lifecycle: {
+        created: function() {
+          var self = this;
+
+          return new Promise(function(resolve) {
+            resolve();
+          });
+        },
+
+        ready: function() {
+        }
+      },
+
+      controllers: {
+        open: function({config={}, source='', filename='', opts={}} = {}) {
+          this.$set('config', config);
+          this.$set('source', source);
+          this.$set('filename', filename);
+          this.$set('opts', opts); 
+          this.$set('email.subject', '');
+          this.$set('email.message', '');
+          this.$set('email.share', 'C');
+          this.$set('email.from', config.ee.from || config.ee.email);
+          this.$set('error', '');
+
+          this.getPrinters();
+          
+          modal.modal({backdrop: 'static', keyboard: false, show: true});
+        },
+        
+        close: function() {
+          modal.modal('hide');
+        },
+        
+        print: async function() {
+          var config = this.$get('config');
+          var source = this.$get('source');
+          var printer = this.$get('printer');
+          var resp = await App.utils.nwio.print({config, text: source, printer});
+
+          this.$set('error', '');
+
+          if (resp.status != 200) {
+            this.$set('error', resp);
+          }                    
+        },
+        
+        download: async function() {
+          var config = this.$get('config');
+          var source = this.$get('source');
+          var filename = this.$get('filename');
+          var cp = this.$get('shareDL');
+          var rows, data, resp;
+          
+          this.$set('error', '');
+          
+          if (cp == 'C') {
+            rows = App.utils.export.extractRowsFromTable({source});
+            data = App.utils.export.makeCSVFromArray({rows});
+      
+            App.utils.download.csv({data, filename: filename + '.csv'});
+          }
+          else {
+            resp = await App.utils.nwio.makePDF({config, source});
+            
+            if (resp.status == 200) {
+              data = await resp.text();
+        
+              App.utils.download.pdf({data, filename: filename + '.pdf'});
+            }
+            else {
+              this.$set('error', resp);
+            }
+          }
+        },
+        
+        email: async function() {
+          var config = this.$get('config');
+          var source = this.$get('source');
+          var filename = this.$get('filename');
+          var email = this.$get('email');
+          var errs = {}, obj = {};
+          var rows, data, resp, file;
+          
+          this.$set('error', '');
+          this.$set('errors.email.from', (email.from) ? '' : 'Required');
+          this.$set('errors.email.to', (email.to) ? '' : 'Required');
+          
+          if (!email.from || !email.to) return;
+      
+          obj.from = email.from;
+          obj.to = email.to;
+          obj.subject = email.subject;
+          obj.bodyHTML = email.message;
+          obj.attachments = [];
+          
+          if (email.share == 'C') {
+            rows = App.utils.export.extractRowsFromTable({source});
+            data = App.utils.export.makeCSVFromArray({rows});
+            file = App.utils.export.makeFileFromData({data, filename: filename + '.csv', opts: {type: 'text/csv'}});
+            
+            obj.attachments.push(file)
+          }
+          
+          if (email.share == 'P') {
+            resp = await App.utils.nwio.makePDF({config, source});
+            
+            if (resp.status == 200) {
+              data = await resp.text();
+              file = App.utils.export.makeFileFromData({data, filename: filename + '.pdf', opts: {type: 'application/pdf'}});
+            
+              obj.attachments.push(file)
+            }
+            else {
+              this.$set('error', resp.error);
+            }
+          }
+      
+          resp = await App.utils.ee.sendOne({config, obj});
+
+          if (resp.success) {
+            this.close();
+          }
+          else {
+            this.$set('error', resp.error);
+          }
+        },     
+        
+        getPrinters: async function() {
+          var config = this.$get('config');
+          var printers = [];
+          var resp = await App.utils.nwio.getPrinters({config});
+
+          if (resp.status == 200) {
+            var data = await resp.json();
+            
+            data.printers.forEach(function(prt) {
+              printers.push({printer: prt});
+            });
+
+            this.$set('printers', printers);
+          }
+          else {
+            this.$set('error', resp);
+          }
+        },
+        
+      },
+
+      watch: {
+        'email.share': function(nv) {
+          if (nv == 'H') {
+            this.$set('email.message', this.$get('source'));
+          }
+          else {
+            this.$set('email.message', '');
+          }
+        }
+      },
+    }
+
+    // only one can be up at a time so no need to init every time called.
+    var mvc = new MVC(modal[0], mvcObj);
+    mvc.init();  
+
+    App.modals.share = mvc.open.bind(mvc);
+  })();
+</script>

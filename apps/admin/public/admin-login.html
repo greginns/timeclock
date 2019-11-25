@@ -1,0 +1,118 @@
+<div id='admin-login' class="modal fade" role="dialog" style='z-index: 10000'>
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class='row'>
+          <div class='col-sm-12'>
+            <span style='font-size: 20px; font-weight: bold'>
+              Admin Login
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-body">
+        <div class='row form-group'>
+          <div class='col-sm-4'>
+            <input type='text' mvc-value='data.username' class='form-control' placeholder='User Name' mvc-on='{keyup: "key13"}'>
+          </div>
+        </div>
+
+        <div class='row form-group'>
+          <div class='col-sm-4'>
+            <input type='password' mvc-value='data.password' class='form-control' placeholder='Password' mvc-on='{keyup: "key13"}'>
+          </div>
+        </div>
+
+        <div class='row form-group'>
+          <div class='col-sm-12'>
+            <span style='color: red' mvc-text='error'>
+            </span>
+          </div>
+        </div>
+
+        <div class='row form-group'>
+          <div class='col-sm-4'>
+            <button class='btn btn-primary' mvc-on='{click: "login"}'>
+              Login
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  (function() {
+    var modalEl = '#admin-login';
+
+    var mvcObj = {
+      model: {
+        data: {
+          username: '',
+          password: ''
+        }
+      },
+
+      lifecycle: {
+        created: function() {
+          var self = this;
+
+          return new Promise(function(resolve) {
+            resolve();
+          });
+        },
+
+        ready: function() {
+        }
+      },
+
+      controllers: {
+        login: function() {
+          var self = this;
+          var data = this.$get('data');
+
+          this.$set('error', '');
+
+          io.post(data, '/admin/login')
+          .then(function(res) {
+            if (res.status == 200) {
+              self.$get('opts.cb')();
+              self.close();
+            }
+            else {
+              self.$set('error', res.data.errors.message);
+            }
+          })
+        },
+
+        key13: function(ev) {
+          if (ev.which == 13) {
+            this.login();
+          }
+        },
+
+        open: function() {
+          $(modalEl).modal({backdrop: 'static', keyboard: false, show: true});
+        },
+
+        close: function() {
+          $(modalEl).modal('hide');
+        },
+
+        popup: function(opts) {
+          this.$set('opts', opts);
+          this.open();
+        }
+      },
+
+      watch: {
+      }
+    }
+
+    App.helpers.modalLogin = new MVC($(modalEl)[0], mvcObj);
+    App.helpers.modalLogin.init();
+  })();
+</script>

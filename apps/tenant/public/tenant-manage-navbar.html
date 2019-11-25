@@ -1,0 +1,95 @@
+<div id='tenant-manage-navbar'>
+  <nav class="navbar fixed-top navbar-expand-md navbar-light bg-primary">
+    <span class="navbar-brand mb-0 h1">TimeClock</span>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item" id='tenant-manage-navbar-payroll'>
+          <a class="nav-link" href="payroll">Payroll</a>
+        </li>
+        <li class="nav-item" id='tenant-manage-navbar-reports'>
+          <a class="nav-link" href="reports">Reports</a>
+        </li>
+        <li class="nav-item dropdown" id='tenant-manage-navbar-setup'>
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Setup
+          </a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="departments" id='tenant-manage-navbar-departments'>Departments</a>
+            <a class="dropdown-item" href="employees" id='tenant-manage-navbar-employees'>Employees</a>
+            <a class="dropdown-item" href="workcodes" id='tenant-manage-navbar-workcodes'>Work Codes</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="users" id='tenant-manage-navbar-users'>Users</a>
+          </div>
+        </li>
+        <li class="nav-item">
+          <span class="nav-link" mvc-on='{click: "logout"}' style='cursor: pointer'>Logout</span>
+        </li>
+      </ul>
+      <span class="navbar-text">
+        {{TID}}
+      </span>
+    </div>
+  </nav>
+
+  <div class='row'>
+    <div class='col-6'>
+      <div class='page-heading'>
+      </div>
+    </div>
+    <div class='col-6'>
+      <div class='page-heading'>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  (function() {
+    var modalEl = '#tenant-manage-navbar';
+
+    var mvcObj = {
+      model: {
+      },
+
+      lifecycle: {
+        created: function() {
+          var self = this;
+
+          return new Promise(function(resolve) {
+            resolve();
+          });
+        },
+
+        ready: function() {
+        }
+      },
+
+      controllers: {
+        logout: function() {
+          var self = this;
+
+          io.delete({}, '/tenant/logout')
+          .then(function(res) {
+            if (res.status == 200) {
+              location = res.data;
+            }
+            else {
+              alert(res);
+            }
+          })
+        },
+      },
+
+      watch: {
+      }
+    }
+    
+    var navbar = new MVC($(modalEl)[0], mvcObj);
+    navbar.init();
+  })();
+</script>

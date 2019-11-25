@@ -1,0 +1,55 @@
+<table class='table table-sm'>
+  <thead>
+    <tr>
+      <th colspan='4' align='center'>
+        Employees
+      </th>
+    </tr>
+    
+    <tr>
+      <th>Dept</th>
+      <th>Code</th>
+      <th>Last Name</th>
+      <th>First Name</th>
+      <th>Address</th>
+      <th>Phone</th>
+      <th>Email</th>
+      <th>Active</th>
+    </tr>  
+  </thead>
+  
+  <tbody>
+    {% for emp in data %}
+      <tr>
+        <td>
+          {{emp.dept}}
+        </td>
+        <td>
+          {{emp.code}}
+        </td>
+        <td>
+          {{emp.last}}
+        </td>
+        <td>
+          {{emp.first}}
+        </td>
+        <td>
+          <table>
+            <tr><td>{{emp.address}}</td></tr>
+            <tr><td>{{emp.city}} {{emp.state}}</td></tr>
+            <tr><td>{{emp.zipcode}}</td></tr>
+          </table>
+        </td>
+        <td>
+          {{emp.phone}}
+        </td>        
+        <td>
+          {{emp.email}}
+        </td>
+        <td>
+          {{emp.active}}
+        </td>
+      </tr>
+    {% endfor %}        
+  </tbody>
+</table>

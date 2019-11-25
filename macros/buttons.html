@@ -1,0 +1,11 @@
+{% macro btn(class='primary', mvc_click='', text) %}
+<button class='btn btn-{{class}}' mvc-on='{click: "{{mvc_click}}"}'>
+  {{text}}
+</button>
+{% endmacro %}
+
+{% macro btnsm(class='primary', mvc_click='', text) %}
+<button class='btn btn-sm btn-{{class}}' mvc-on='{click: "{{mvc_click}}"}'>
+  {{text}}
+</button>
+{% endmacro %}

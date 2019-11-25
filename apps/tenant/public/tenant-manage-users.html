@@ -1,0 +1,106 @@
+<page id='tenant-manage-users' style='display: none'>
+  <section id='tenant-manage-users-section'>
+    <div class='row form-group justify-content-center'>
+      
+      <div class='col-12 col-sm-3 mb-4'>
+        <div class='card'>
+          <div class='card-header'>
+            <div class='row'>
+              <div class='col-8'>
+                {{ buttons.btnsm(class='success', mvc_click='newUser', text='+ New User') }}
+              </div>
+            </div>          
+          </div>
+          
+          <div class='card-body'>
+            <div class='row'>
+              <div class='col-12'>
+                <select mvc-each='users' mvc-value='userPK' class='form-control' size='10' style='width: 100%'>
+                  <option mvc-option='{text: "users[$index].name", value: "users[$index].code"}'></option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class='col-12 col-sm-6'>
+        <div class='card'>
+          <div class='card-header'>
+            <div class='row'>
+              <div class='col-6 col-sm-3'>
+                {{ fields.Char(type='text', id=user.code.id, maxlength=user.code.maxLength, mvc_value='user.code', mvc_event_type='blur', mvc_disabled='this.$get("userPK")', label=user.code.verbose) }}
+              </div>
+              
+              <div class='col-sm-1'></div>
+              
+              <div class='col-12 col-sm-4'>
+                {{ fields.Boolean(id=user.active.id, mvc_checked='user.active', label=user.active.verbose) }}
+              </div>
+            </div>          
+          </div>
+          
+          <div class='card-body'>
+            <div class='row form-group'>
+              <div class='col-sm-6'>
+                {{ fields.Char(type='text', id=user.name.id, maxlength=user.name.maxLength, mvc_value='user.name', label=user.name.verbose) }}
+              </div>
+            </div>
+            
+            <div class='row'>
+              <div class='col-12 col-sm-6'>
+                {{ fields.Char(type='text', id=user.email.id, maxlength=user.email.maxLength, mvc_value='user.email', label=user.email.verbose) }}
+              </div>
+              
+              <div class='col-12 col-sm-6'>
+                {{ fields.Password(type='password', id=user.password.id, maxlength=user.password.maxLength, mvc_value='user.password', label=user.password.verbose) }}
+              </div>          
+            </div>
+          </div>
+          
+          <div class='card-footer'>
+            <div class='row'>
+              <div class='col-12'>
+                <span mvc-hide='this.$get("userPK")'>
+                  {{ buttons.btn(class='primary', mvc_click='save', text='Add User') }}
+                </span>
+                <span mvc-show='this.$get("userPK")'>
+                  {{ buttons.btn(class='primary', mvc_click='save', text='Update User') }}
+                  {{ buttons.btn(class='danger', mvc_click='delete', text='Delete User') }}
+                </span>
+                {{ buttons.btn(class='secondary', mvc_click='clear', text='Clear') }}
+              </div>
+            </div>            
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div aria-live="polite" aria-atomic="true" style="position: absolute; bottom: 5px; right: 0; z-index:20000">
+      <div style="position: absolute; bottom: 5px; right: 0; min-width: 350px">
+        <div class="toast" id="tenant-manage-users-toast1" role="alert" aria-live="assertive" aria-atomic="true">
+          <div class="toast-header">
+            <strong class="mr-auto">TimeKeep</strong>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="toast-body">
+            <span mvc-text='toastMessage'></span>
+          </div>
+        </div>  
+      </div>
+    </div>
+  </section>
+  
+  <script>
+    (function() {
+      var page = $('#tenant-manage-users');
+      var section = $('#tenant-manage-users-section');
+      var path = '/users';
+      var title = 'Tenant';
+
+      App.mvcs[section[0].id] = {mvcObj: App.mvcObjs.tenant_manage_users, page: page, section: section, path: path, title: title};
+    })();
+  </script>
+</page>

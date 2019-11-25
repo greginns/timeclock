@@ -1,0 +1,75 @@
+<table class='table table-sm'>
+  <thead>
+    <tr>
+      <th colspan='13' align='center'>
+        Payroll Closeout {{startDate}} - {{endDate}}
+      </th>
+    </tr>
+    
+    <tr>
+      <th>Employee</th>
+      <th>Work Code</th>
+      <th class='text-right'>Mon</th>
+      <th class='text-right'>Tue</th>
+      <th class='text-right'>Wed</th>
+      <th class='text-right'>Thu</th>
+      <th class='text-right'>Fri</th>
+      <th class='text-right'>Sat</th>
+      <th class='text-right'>Sun</th>
+      <th class='text-right'>Reg</th>
+      <th class='text-right'>OT</th>
+      <th class='text-right'>Total</th>
+      <th class='text-right'>Rate</th>
+    </tr>  
+  </thead>
+  
+  <tbody>
+    {% for deptInfo in data %}
+      <tr>
+        <td colspan='12'>
+          {{deptInfo.name}}
+        </td>
+      </tr>
+      {% for empInfo in deptInfo.employees %}
+        <tr>
+          <td>
+            {{empInfo.last}}, {{empInfo.first}}
+          </td>
+          <td colspan='8'>
+            Week 1:&nbsp;&nbsp;{{empInfo.weeks[0] | hhmm}} &nbsp;&nbsp;&nbsp;&nbsp;
+            Week 2:&nbsp;&nbsp;{{empInfo.weeks[1] | hhmm}}
+          </td>
+          <td class='text-right'>
+            {{empInfo.reg | hhmm}}
+          </td>
+          <td class='text-right'>
+            {{empInfo.ot | hhmm}}
+          </td>
+          <td class='text-right'>
+            {{empInfo.total | hhmm}}
+          </td>
+          <td></td>
+        </tr>
+        {% for workInfo in empInfo.works %}
+          {% for weekInfo in workInfo.weeks %}
+            <tr>
+              <td></td>
+              <td>{% if loop.first %}{{workInfo.code}} {% endif %}</td>
+              <td class='text-right'>{{weekInfo.days[0] | hhmm}}</td>
+              <td class='text-right'>{{weekInfo.days[1] | hhmm}}</td>
+              <td class='text-right'>{{weekInfo.days[2] | hhmm}}</td>
+              <td class='text-right'>{{weekInfo.days[3] | hhmm}}</td>
+              <td class='text-right'>{{weekInfo.days[4] | hhmm}}</td>
+              <td class='text-right'>{{weekInfo.days[5] | hhmm}}</td>
+              <td class='text-right'>{{weekInfo.days[6] | hhmm}}</td>
+              <td class='text-right'>{{weekInfo.reg | hhmm}}</td>
+              <td class='text-right'>{{weekInfo.ot | hhmm}}</td>
+              <td class='text-right'>{{weekInfo.total | hhmm}}</td>
+              <td class='text-right'>{{weekInfo.rate}}</td>
+            </tr>
+          {% endfor %}
+        {% endfor %}
+      {% endfor %}
+    {% endfor %}        
+  </tbody>
+</table>

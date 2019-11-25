@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang=en style='height: 100%'>
+  <head>
+    <title>
+      Admin Login
+    </title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    {% block css %}
+    <style type="text/css">
+    </style>
+    {% endblock %}
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>    
+  </head>
+  
+  <body style='background-color: #eeeeee; height: 100%; margin: 0px;'>
+    <div class="container-fluid">
+      <div class="bg-primary">
+        <div class='row'>
+          <div class='col-12 text-center text-white'>
+            <h4>
+              Admin Login
+            </h4>
+          </div>
+        </div>
+      </div>
+
+      <div class='row'>
+        <div class='col-12'>
+          &nbsp;
+        </div>
+        <div class='col-12'>
+          &nbsp;
+        </div>
+      </div>
+     
+      <div class='row justify-content-center'>
+        <div class='col-12 col-sm-3'>
+          <div class='card'>
+            <div class='card-body'>
+              <div class='row form-group'>
+                <div class='col-12'><input type='text' maxlength='20' class='form-control' id='username' placeholder='Username' /></div>
+              </div>
+              <div class='row form-group'>
+                <div class='col-12'><input type='password' maxlength='20' class='form-control' id='password' placeholder='Password' /></div>
+              </div>
+              <div class='row form-group'>
+                <div class='col-12'><span id='errMsg' style='color: red'></span></div>
+              </div>
+              <div class='row justify-content-center'>
+                <div class='col-5'><button class='btn btn-primary' id='loginBtn'>Login</button></div>
+              </div>                    
+            </div>
+          </div>                  
+        </div>
+      </div>
+    </div>
+    
+    <script type="text/javascript">
+      {% include "../../iofetch.js" %}    
+
+      $('#username').on('keyup', key13);
+      $('#password').on('keyup', key13);
+      $('#loginBtn').on('click', login);
+
+      function key13(ev) {
+        if (ev.which == 13) {
+          login();
+        }
+      };
+      
+      function login() {
+        var username = $('#username').val();
+        var password = $('#password').val();
+        $('#errMsg').text('');
+        
+        if (!username) {
+          $('#errMsg').text('Username is required');
+          return;
+        }
+        
+        if (!password) {
+          $('#errMsg').text('Password is required');
+          return;
+        }
+        
+        io.post({username, password}, '/admin/login')
+        .then(function(res) {
+          if (res.status == 200) {
+            location = '/admin/manage';
+          }
+          else {
+            $('#errMsg').text(res.data.errors.message);
+          }
+        })
+        .catch(function(err) {
+          alert(err.errMsg)
+        })
+      };
+      
+    </script>
+  </body>
+</html>

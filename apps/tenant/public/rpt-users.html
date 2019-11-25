@@ -1,0 +1,35 @@
+<table class='table table-sm'>
+  <thead>
+    <tr>
+      <th colspan='5' align='center'>
+        Users
+      </th>
+    </tr>
+    
+    <tr>
+      <th>Code</th>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Active</th>
+    </tr>  
+  </thead>
+  
+  <tbody>
+    {% for user in data %}
+      <tr>
+        <td>
+          {{user.code}}
+        </td>
+        <td>
+          {{user.name}}
+        </td>
+        <td>
+          {{user.email}}
+        </td>
+        <td>
+          {{user.active}}
+        </td>
+      </tr>
+    {% endfor %}        
+  </tbody>
+</table>

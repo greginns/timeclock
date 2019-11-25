@@ -1,0 +1,166 @@
+<page id='admin-manage-tenants' style='display: none'>
+  <section id='admin-manage-tenants-section'>
+    <div class='row form-group justify-content-center'>
+      
+      <div class='col-12 col-sm-3 mb-4'>
+        <div class='card'>
+          <div class='card-header'>
+            <div class='row'>
+              <div class='col-9'>
+                {{ buttons.btnsm(class='success', mvc_click='newTenant', text='+ New Tenant') }}
+              </div>          
+            </div>            
+          </div>
+          
+          <div class='card-body'>
+            <div class='row'>
+              <div class='col-12'>
+                <select mvc-each='tenants' mvc-value='tenantPK' class='form-control' size='10' style='width: 100%'>
+                  <option mvc-option='{text: "tenants[$index].coname", value: "tenants[$index].code"}'></option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class='col-12 col-sm-6'>
+        <div class='card'>
+          <div class='card-header'>
+            <div class='row'>
+              <div class='col-6 col-sm-3'>
+                {{ fields.Char(type='text', id=tenant.code.id, maxlength=tenant.code.maxLength, mvc_value='tenant.code', mvc_disabled='this.$get("tenantPK")', label=tenant.code.verbose) }}
+              </div>
+              
+              <div class='col-sm-1'></div>
+              
+              <div class='col-12 col-sm-4'>
+                {{ fields.Boolean(id=tenant.active.id, mvc_checked='tenant.active', label=tenant.active.verbose) }}
+              </div>
+              
+            </div>            
+          </div>
+          
+          <div class='card-body'>
+            <div class='row form-group'>
+              <div class='col-sm-6'>
+                {{ fields.Char(type='text', id=tenant.coname.id, maxlength=tenant.coname.maxLength, mvc_value='tenant.coname', label=tenant.coname.verbose) }}
+              </div>
+            </div>
+            
+            <div class='row form-group'>
+              <div class='col-12 col-sm-6'>
+                {{ fields.Char(type='text', id=tenant.first.id, maxlength=tenant.first.maxLength, mvc_value='tenant.first', label=tenant.first.verbose) }}
+              </div>
+
+              <div class='col-12 col-sm-6'>
+                {{ fields.Char(type='text', id=tenant.last.id, maxlength=tenant.last.maxLength, mvc_value='tenant.last', label=tenant.last.verbose) }}
+              </div>
+            </div>
+            
+            <div class='row form-group'>
+              <div class='col-12 col-sm-6'>
+                {{ fields.Char(type='text', id=tenant.address.id, maxlength=tenant.address.maxLength, mvc_value='tenant.address', label=tenant.address.verbose) }}
+              </div>
+
+              <div class='col-12 col-sm-6'>
+                {{ fields.Char(type='text', id=tenant.city.id, maxlength=tenant.city.maxLength, mvc_value='tenant.city', label=tenant.city.verbose) }}
+              </div>
+            </div>
+            
+            <div class='row form-group'>
+              <div class='col-12 col-sm-6'>
+                {{ fields.Char(type='text', id=tenant.state.id, maxlength=tenant.state.maxLength, mvc_value='tenant.state', label=tenant.state.verbose) }}
+              </div>
+
+              <div class='col-12 col-sm-6'>
+                {{ fields.Char(type='text', id=tenant.zipcode.id, maxlength=tenant.zipcode.maxLength, mvc_value='tenant.zipcode', label=tenant.zipcode.verbose) }}
+              </div>
+            </div>
+            
+            <div class='row'>
+              <div class='col-12 col-sm-6'>
+                {{ fields.Char(type='text', id=tenant.phone.id, maxlength=tenant.phone.maxLength, mvc_value='tenant.phone', label=tenant.phone.verbose) }}
+              </div>
+
+              <div class='col-12 col-sm-6'>
+                {{ fields.Char(type='text', id=tenant.email.id, maxlength=tenant.email.maxLength, mvc_value='tenant.email', label=tenant.email.verbose) }}
+              </div>
+            </div>
+          </div>  
+          
+          <div class='card-footer'>
+            <div class='row'>
+              <div class='col-12'>
+                <span mvc-hide='this.$get("tenantPK")'>
+                  {{ buttons.btn(class='primary', mvc_click='save', text='Create') }}
+                </span>
+                <span mvc-show='this.$get("tenantPK")'>
+                  {{ buttons.btn(class='primary', mvc_click='save', text='Update') }}
+                  {{ buttons.btn(class='secondary', mvc_click='migrate', text='Migrate') }}
+                  {{ buttons.btn(class='danger', mvc_click='delete', text='Delete') }}
+                </span>
+                {{ buttons.btn(class='secondary', mvc_click='clear', text='Clear') }}            
+              </div>
+            </div>            
+          </div>
+        </div>
+        
+        <div class='row form-group' mvc-show='this.$get("errors._verify").length > 0'>
+          <div class='col-12'>
+            <table class='table'>
+              <thead>
+                <tr>
+                  <th>
+                    Model
+                  </th>
+                  <th>
+                    Error(s)
+                  </th>
+                </tr>
+              </thead>
+              <tbody mvc-each='errors._verify'>
+                <tr>
+                  <td>
+                    <span mvc-text='errors._verify[$index].model'></span>
+                  </td>
+                  <td>
+                    <span mvc-text='errors._verify[$index].verrs'></span>
+                  </td>
+                </tr>
+              </tbody>
+            </table> 
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  
+    <div aria-live="polite" aria-atomic="true" style="position: absolute; bottom: 5px; right: 0; z-index:20000">
+      <div style="position: absolute; bottom: 5px; right: 0; min-width: 350px">
+        <div class="toast" id="admin-manage-tenants-toast1" role="alert" aria-live="assertive" aria-atomic="true">
+          <div class="toast-header">
+            <strong class="mr-auto">TimeKeep</strong>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="toast-body">
+            <span mvc-text='toastMessage'></span>
+          </div>
+        </div>  
+      </div>
+    </div>
+  </section>
+  
+  <script>
+    (function() {
+      var page = $('#admin-manage-tenants');
+      var section = $('#admin-manage-tenants-section');
+      var path = '/tenants';
+      var title = 'Admin';
+
+      App.mvcs[section[0].id] = {mvcObj: App.mvcObjs.admin_manage_tenants, page: page, section: section, path: path, title: title};
+    })();
+  </script>
+</page>

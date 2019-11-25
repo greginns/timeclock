@@ -1,0 +1,220 @@
+<div id='mvc-alert' class="modal fade" role="dialog" style='z-index: 1100'>
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header" mvc-show='this.$get("opts.title")'>
+        <h5 class="modal-title">
+          <span mvc-text='opts.title'></span>
+        </h5>
+      </div>
+
+      <div class="modal-body">
+        <div class="container-fluid">
+          <div class='row form-group'>
+            <div class='col-12 text-center'>
+              <span mvc-html='opts.text'>
+              </span>
+            </div>
+          </div>
+
+          <div class='row form-group' mvc-show='this.$get("opts.type") == "prompt"'>
+            <div class='col-12'>
+              <input type='text' mvc-value='opts.value' class='form-control'>
+            </div>
+          </div>
+        </div>
+
+        <div class='row form-group'>
+          <div class='col-12' mvc-each='opts.buttons' id='mvc-alert-button-container'>
+            <button class='btn btn-sm m-1' mvc-class='opts.buttons[$index].class' data-index='$index' mvc-on='{click: "clicked"}'>
+              <span mvc-text='opts.buttons[$index].text'></span>
+            </button>  
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" id='mvc-spinner'>
+  <div class="modal-dialog modal-dialog-centered justify-content-center" role="document">
+    <div class="d-flex justify-content-center">
+      <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  (function() {
+    /* alert: 
+          title:
+          html:
+          buttons: (1) defaults to Okay
+          await window.mvcAlert('')
+       prompt:
+          title:
+          html:
+          buttons: (1) defaults to Okay, (2) defaults to Cancel
+          default value:
+          defaultButton: #
+          response: .then(value), catch(null)
+       confirm:
+          title:
+          html:
+          buttons: [{text:, class:, value:}]
+          defaultButton: #
+          res = await window.mvcConfirm('');
+    */
+    var modal = $('#mvc-alert');
+
+    var mvcObj = {
+      model: {
+        opts: {
+          type: '',
+          title: '',
+          text: '',
+          value: '',
+          buttons: [],
+          defaultButton: 0,
+          okayButton: 0,
+        },
+        
+        resolveVal: '',
+        rejectVal: '',
+      },
+
+      lifecycle: {
+        created: function() {
+          var self = this;
+
+          return new Promise(function(resolve) {
+            resolve();
+          });
+        },
+
+        ready: function() {
+        }
+      },
+
+      controllers: {
+        open: function() {
+          modal.modal({backdrop: 'static', keyboard: false, show: true});
+          this.opened();
+        },
+        
+        opened: function() {
+          var opts = this.$get('opts');
+
+          setTimeout(function() {
+            $('#mvc-alert-button-container').find('button[data-index="' + opts.defaultButton + '"]').focus();    
+          },500)
+        },
+        
+        close: function() {
+          modal.modal('hide');
+        },
+        
+        common: function(type, res, rej, opts) {
+          var self = this;
+          opts.type = type;
+          
+          opts.buttons.forEach(function(btn, idx) {
+            btn.value = btn.value || idx;
+          })
+          
+          if (!('defaultButton') in opts || !opts.defaultButton) opts.defaultButton = '0';
+          if (!('okayButton') in opts || !opts.okayButton) opts.okayButton = '0';
+
+          this.$set('resolveVal', res);
+          this.$set('rejectVal', rej);
+          this.$set('opts', opts);
+          this.open();           
+        },
+        
+        alert: async function(options) {
+          var self = this;
+
+          return new Promise(function(resolve, reject) {
+            options = options || '';
+            
+            if (_.isObject(options) === false) {
+              options = {text: options, buttons: [{text: 'Okay', class: 'btn-primary'}], defaultButton: 0, okayButton: 0};
+            }
+            
+            self.common('alert', resolve, reject, options)
+          })
+        },
+          
+        prompt: async function(options, value) {
+          var self = this;
+          
+          return new Promise(function(resolve, reject) {
+            options = options || '';
+            
+            if (_.isObject(options) === false) {
+              options = {text: options, value: value || '', buttons: [{text: 'Okay', class: 'btn-primary'}, {text: 'Cancel', class: 'btn-danger'}], defaultButton: 0, okayButton: 0};
+            }
+            
+            self.common('prompt', resolve, reject, options)
+          })
+        },
+        
+        confirm: async function(options) {
+          var self = this;
+          
+          return new Promise(function(resolve, reject) {
+            options = options || '';
+            
+            if (_.isObject(options) === false) {
+              options = {text: options, buttons: [{text: 'Okay', class: 'btn-primary'}, {text: 'Cancel', class: 'btn-danger'}], defaultButton: 1, okayButton: 0};
+            }
+            
+            self.common('confirm', resolve, reject, options)
+          })
+        },
+        
+        clicked: function(ev) {
+          var opts = this.$get('opts');
+          var btnIdx = $(ev.target).closest('button').attr('data-index');
+          var btn = opts.buttons[btnIdx];
+          
+          if (opts.type == 'prompt') {
+            if (btnIdx == opts.okayButton) {
+              this.$get('resolveVal')(opts.value);
+            }
+            else {
+              this.$get('rejectVal')(btn.value);
+            }
+          }
+          else {
+            this.$get('resolveVal')(btn.value);
+          }
+          
+          this.close();
+        }
+      },
+
+      watch: {
+      },
+    }
+
+    // only one can be up at a time so no need to init every time called.
+    var mvc = new MVC(modal[0], mvcObj);
+    mvc.init();  
+
+    App.modals.alert = mvc.alert.bind(mvc);
+    App.modals.confirm = mvc.confirm.bind(mvc);
+    App.modals.prompt = mvc.prompt.bind(mvc);
+    App.modals.spinner = {
+      show: function() {
+        $('#mvc-spinner').modal({backdrop: 'static', keyboard: false, show: true});
+      },
+      
+      hide: function() {
+        $('#mvc-spinner').modal('hide');
+      },
+    }
+  })();
+</script>

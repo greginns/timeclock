@@ -1,0 +1,529 @@
+<div id='mvc-boot-cal' class="modal fade" role="dialog" style='z-index: 2100'>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span mvc-text='dateInWords'></span>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" mvc-on='{click: "calClose"}'>
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+
+        <span mvc-show='this.$get("cal.cal1")'>
+          <table class='table table-bordered table-sm mvc-boot-cal-table'>
+            <thead>
+              <tr>
+                <th>
+                  <button class='btn btn-primary' mvc-on='{click: "cal1PrevYear"}'>
+                    &lt;
+                  </button>
+                </th>
+                <th colspan='5' style='text-align: center'>
+                  <button class='btn btn-primary' mvc-on='{click: "cal1Month"}'>
+                    <span mvc-text='cal1.month'></span>
+                  </button>
+                  <button class='btn btn-primary' mvc-on='{click: "cal1Year"}'>
+                    <span mvc-text='cal1.year'></span>
+                  </button>
+                </th>
+                <th style='text-align: right'>
+                  <button class='btn btn-primary' mvc-on='{click: "cal1NextYear"}'>
+                    &gt;
+                  </button>
+                </th>
+              </tr>
+
+              <tr>
+                <th width='14.28%'>Su</th>
+                <th width='14.28%'>Mo</th>
+                <th width='14.28%'>Tu</th>
+                <th width='14.32%'>We</th>
+                <th width='14.28%'>Th</th>
+                <th width='14.28%'>Fr</th>
+                <th width='14.28%'>Sa</th>
+              </tr>
+            </thead>
+
+            <tbody mvc-on='{click: "cal1DayClicked"}' style='cursor: pointer'>
+              <tr>
+                <td mvc-attribute='cal1.attrs.0'><span mvc-text='cal1.days.0' mvc-class='cal1.classes.0'></span></td>
+                <td mvc-attribute='cal1.attrs.1'><span mvc-text='cal1.days.1' mvc-class='cal1.classes.1'></span></td>
+                <td mvc-attribute='cal1.attrs.2'><span mvc-text='cal1.days.2' mvc-class='cal1.classes.2'></span></td>
+                <td mvc-attribute='cal1.attrs.3'><span mvc-text='cal1.days.3' mvc-class='cal1.classes.3'></span></td>
+                <td mvc-attribute='cal1.attrs.4'><span mvc-text='cal1.days.4' mvc-class='cal1.classes.4'></span></td>
+                <td mvc-attribute='cal1.attrs.5'><span mvc-text='cal1.days.5' mvc-class='cal1.classes.5'></span></td>
+                <td mvc-attribute='cal1.attrs.6'><span mvc-text='cal1.days.6' mvc-class='cal1.classes.6'></span></td>
+              </tr>
+              <tr>
+                <td mvc-attribute='cal1.attrs.7'><span mvc-text='cal1.days.7' mvc-class='cal1.classes.7'></span></td>
+                <td mvc-attribute='cal1.attrs.8'><span mvc-text='cal1.days.8' mvc-class='cal1.classes.8'></span></td>
+                <td mvc-attribute='cal1.attrs.9'><span mvc-text='cal1.days.9' mvc-class='cal1.classes.9'></span></td>
+                <td mvc-attribute='cal1.attrs.10'><span mvc-text='cal1.days.10' mvc-class='cal1.classes.10'></span></td>
+                <td mvc-attribute='cal1.attrs.11'><span mvc-text='cal1.days.11' mvc-class='cal1.classes.11'></span></td>
+                <td mvc-attribute='cal1.attrs.12'><span mvc-text='cal1.days.12' mvc-class='cal1.classes.12'></span></td>
+                <td mvc-attribute='cal1.attrs.13'><span mvc-text='cal1.days.13' mvc-class='cal1.classes.13'></span></td>
+              </tr>
+              <tr>
+                <td mvc-attribute='cal1.attrs.14'><span mvc-text='cal1.days.14' mvc-class='cal1.classes.14'></span></td>
+                <td mvc-attribute='cal1.attrs.15'><span mvc-text='cal1.days.15' mvc-class='cal1.classes.15'></span></td>
+                <td mvc-attribute='cal1.attrs.16'><span mvc-text='cal1.days.16' mvc-class='cal1.classes.16'></span></td>
+                <td mvc-attribute='cal1.attrs.17'><span mvc-text='cal1.days.17' mvc-class='cal1.classes.17'></span></td>
+                <td mvc-attribute='cal1.attrs.18'><span mvc-text='cal1.days.18' mvc-class='cal1.classes.18'></span></td>
+                <td mvc-attribute='cal1.attrs.19'><span mvc-text='cal1.days.19' mvc-class='cal1.classes.19'></span></td>
+                <td mvc-attribute='cal1.attrs.20'><span mvc-text='cal1.days.20' mvc-class='cal1.classes.20'></span></td>
+              </tr>
+              <tr>
+                <td mvc-attribute='cal1.attrs.21'><span mvc-text='cal1.days.21' mvc-class='cal1.classes.21'></span></td>
+                <td mvc-attribute='cal1.attrs.22'><span mvc-text='cal1.days.22' mvc-class='cal1.classes.22'></span></td>
+                <td mvc-attribute='cal1.attrs.23'><span mvc-text='cal1.days.23' mvc-class='cal1.classes.23'></span></td>
+                <td mvc-attribute='cal1.attrs.24'><span mvc-text='cal1.days.24' mvc-class='cal1.classes.24'></span></td>
+                <td mvc-attribute='cal1.attrs.25'><span mvc-text='cal1.days.25' mvc-class='cal1.classes.25'></span></td>
+                <td mvc-attribute='cal1.attrs.26'><span mvc-text='cal1.days.26' mvc-class='cal1.classes.26'></span></td>
+                <td mvc-attribute='cal1.attrs.27'><span mvc-text='cal1.days.27' mvc-class='cal1.classes.27'></span></td>
+              </tr>
+              <tr>
+                <td mvc-attribute='cal1.attrs.28'><span mvc-text='cal1.days.28' mvc-class='cal1.classes.28'></span></td>
+                <td mvc-attribute='cal1.attrs.29'><span mvc-text='cal1.days.29' mvc-class='cal1.classes.29'></span></td>
+                <td mvc-attribute='cal1.attrs.30'><span mvc-text='cal1.days.30' mvc-class='cal1.classes.30'></span></td>
+                <td mvc-attribute='cal1.attrs.31'><span mvc-text='cal1.days.31' mvc-class='cal1.classes.31'></span></td>
+                <td mvc-attribute='cal1.attrs.32'><span mvc-text='cal1.days.32' mvc-class='cal1.classes.32'></span></td>
+                <td mvc-attribute='cal1.attrs.33'><span mvc-text='cal1.days.33' mvc-class='cal1.classes.33'></span></td>
+                <td mvc-attribute='cal1.attrs.34'><span mvc-text='cal1.days.34' mvc-class='cal1.classes.34'></span></td>
+              </tr>
+              <tr>
+                <td mvc-attribute='cal1.attrs.35'><span mvc-text='cal1.days.35' mvc-class='cal1.classes.35'></span></td>
+                <td mvc-attribute='cal1.attrs.36'><span mvc-text='cal1.days.36' mvc-class='cal1.classes.36'></span></td>
+                <td mvc-attribute='cal1.attrs.37'><span mvc-text='cal1.days.37' mvc-class='cal1.classes.37'></span></td>
+                <td mvc-attribute='cal1.attrs.38'><span mvc-text='cal1.days.38' mvc-class='cal1.classes.38'></span></td>
+                <td mvc-attribute='cal1.attrs.39'><span mvc-text='cal1.days.39' mvc-class='cal1.classes.39'></span></td>
+                <td mvc-attribute='cal1.attrs.40'><span mvc-text='cal1.days.40' mvc-class='cal1.classes.40'></span></td>
+                <td mvc-attribute='cal1.attrs.41'><span mvc-text='cal1.days.41' mvc-class='cal1.classes.41'></span></td>
+              </tr>
+            </tbody>
+          </table>
+        </span>
+
+        <span mvc-show='this.$get("cal.cal2")'>
+          <table class='table table-bordered table-sm mvc-boot-cal-table'>
+            <thead>
+              <tr>
+                <th>
+                  <button class='btn btn-primary' mvc-on='{click: "cal2PrevYear"}'>
+                    &lt;
+                  </button>
+                </th>
+                <th style='text-align: center'>
+                  <button class='btn btn-primary' mvc-on='{click: "cal2Year"}'>
+                    <span mvc-text='cal2.year'></span>
+                  </button>
+                </th>
+                <th style='text-align: right'>
+                  <button class='btn btn-primary' mvc-on='{click: "cal2NextYear"}'>
+                    &gt;
+                  </button>
+                </th>
+              </tr>
+            </thead>
+
+            <tbody mvc-on='{click: "cal2MonthClicked"}' style='cursor: pointer'>
+              <tr>
+                <td data-month='0'>January</td>
+                <td data-month='1'>February</td>
+                <td data-month='2'>March</td>
+              </tr>
+              <tr>
+                <td data-month='3'>April</td>
+                <td data-month='4'>May</td>
+                <td data-month='5'>June</td>
+              </tr>
+              <tr>
+                <td data-month='6'>July</td>
+                <td data-month='7'>August</td>
+                <td data-month='8'>September</td>
+              </tr>
+              <tr>
+                <td data-month='9'>October</td>
+                <td data-month='10'>November</td>
+                <td data-month='11'>December</td>
+              </tr>
+              <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+              </tr>
+              <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+              </tr>
+            </tbody>
+          </table>
+        </span>
+
+        <span mvc-show='this.$get("cal.cal3")'>
+          <table class='table table-bordered table-sm mvc-boot-cal-table'>
+            <thead>
+              <tr>
+                <th>
+                  <button class='btn btn-primary' mvc-on='{click: "cal3PrevDecade"}'>
+                    &lt;
+                  </button>
+                </th>
+                <th colspan='2' style='text-align: center'>
+                </th>
+                <th style='text-align: right'>
+                  <button class='btn btn-primary' mvc-on='{click: "cal3NextDecade"}'>
+                    &gt;
+                  </button>
+                </th>
+              </tr>
+            </thead>
+
+            <tbody mvc-on='{click: "cal3YearClicked"}' style='cursor: pointer'>
+              <tr>
+                <td><span mvc-text='cal3.years.0'></span></td>
+                <td><span mvc-text='cal3.years.1'></span></td>
+                <td><span mvc-text='cal3.years.2'></span></td>
+                <td><span mvc-text='cal3.years.3'></span></td>
+              </tr>
+              <tr>
+                <td><span mvc-text='cal3.years.4'></span></td>
+                <td><span mvc-text='cal3.years.5'></span></td>
+                <td><span mvc-text='cal3.years.6'></span></td>
+                <td><span mvc-text='cal3.years.7'></span></td>
+              </tr>
+              <tr>
+                <td><span mvc-text='cal3.years.8'></span></td>
+                <td><span mvc-text='cal3.years.9'></span></td>
+                <td><span mvc-text='cal3.years.10'></span></td>
+                <td><span mvc-text='cal3.years.11'></span></td>
+              </tr>
+              <tr>
+                <td><span mvc-text='cal3.years.12'></span></td>
+                <td><span mvc-text='cal3.years.13'></span></td>
+                <td><span mvc-text='cal3.years.14'></span></td>
+                <td><span mvc-text='cal3.years.15'></span></td>
+              </tr>
+              <tr>
+                <td><span mvc-text='cal3.years.16'></span></td>
+                <td><span mvc-text='cal3.years.17'></span></td>
+                <td><span mvc-text='cal3.years.18'></span></td>
+                <td><span mvc-text='cal3.years.19'></span></td>
+              </tr>
+              <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+              </tr>
+            </tbody>
+          </table>
+        </span>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  (function() {
+    var modal = $('#mvc-boot-cal');
+    var cal = $('#mvc-boot-cal');
+
+    var mvcObj = {
+      model: {
+        cal: {
+          cal1: false,
+          cal2: false,
+          cal3: false,
+          origDt: '',
+          currDt: '',
+          callback: ''
+        },
+
+        cal1: {
+          year: '',
+          month: '',
+          days: [],
+          classes: [],
+          attrs: [],
+        },
+
+        cal2: {
+          year: '',
+        },
+
+        cal3: {
+          src: 1,
+          first: 0,
+          last: 0,
+          years: [],
+        },
+
+        dateInWords: '',
+
+        popups: {
+          modalShow: false
+        },
+      },
+
+      lifecycle: {
+        created: function() {
+          var self = this;
+
+          return new Promise(function(resolve) {
+            resolve();
+          });
+        },
+
+        ready: function() {
+        }
+      },
+
+      controllers: {
+        calInit: function(dt, callback) {
+          // dt must be a moment date
+          var self = this;
+
+          modal.modal({backdrop: 'static', keyboard: true, show: true});
+          this.$set('cal.origDt', moment(dt));
+          this.$set('cal.currDt', moment(dt));
+          this.$set('cal.callback', callback);
+
+          this.cal1Init();
+        },
+
+        calOpenPane: function(cal) {
+          for (var i=1; i<4; i++) {
+            this.$set('cal.cal'+i, false);
+          }
+
+          this.$set('cal.cal'+cal, true);
+        },
+
+        calClose: function() {
+          var dt = this.$get('cal.origDt');
+          var cb = this.$get('cal.callback');
+          cb(dt);
+
+          this.calHide();
+        },
+
+        calDone: function() {
+          var dt = this.$get('cal.currDt');
+          var cb = this.$get('cal.callback');
+          cb(dt);
+
+          this.calHide();
+        },
+
+        calHide: function() {
+          modal.modal('hide');
+        },
+
+        /* CAL 1 */
+        cal1Init: function() {
+          this.calOpenPane(1);
+          this.cal1Display();
+        },
+
+        cal1Display: function() {
+          var dt = this.$get('cal.currDt');
+          var origDt = this.$get('cal.origDt');
+          var fom = moment(dt).date(1);    // create first of the month
+          var fomDow = fom.day();          // day of the week on the first
+          var lom = moment(fom).add(1,'months').subtract(1,'days').date();    // last day of the month
+          var plom = moment(fom).subtract(1,'days').date();  // last day of the month of prev month
+          var month = dt.format('MMMM');
+          var year = dt.format('YYYY');
+          var mth = dt.month();
+          var yr = dt.year();
+
+          this.$set('dateInWords', dt.format('dddd, MMMM Do, YYYY'));
+
+          var pdt = moment(dt).subtract(1, 'months');
+          var pmth = pdt.month();
+          var pyr = pdt.year();
+
+          var ndt = moment(dt).add(1, 'months');
+          var nmth = ndt.month();
+          var nyr = ndt.year();
+
+          // build list of 42 days
+          var days = [], classes = [], attrs = [];
+
+          for (var i=plom-fomDow+1; i<=plom; i++) {
+            var klass=['mvc-boot-cal-offmonth'];
+
+            days.push(i);
+            attrs.push({'data-year': pyr, 'data-month': pmth, 'data-day': i});
+
+            if (moment([pyr, pmth, i]).isSame(origDt, 'day')) {
+              klass.push('mvc-boot-cal-orig');
+            }
+
+            classes.push(klass.join(' '));
+          }
+
+          for (var i=0,klass=[]; i<lom; i++) {
+            var klass=[];
+
+            days.push(i+1);
+            attrs.push({'data-year': yr, 'data-month': mth, 'data-day': i+1});
+
+            if (moment([yr, mth, i+1]).isSame(origDt, 'day')) {
+              klass.push('mvc-boot-cal-orig');
+            }
+
+            classes.push(klass.join(' '));
+          }
+
+          var dl = 42-days.length;
+
+          for (var i=0; i<dl; i++) {
+            var klass=['mvc-boot-cal-offmonth'];
+
+            days.push(i+1);
+            attrs.push({'data-year': nyr, 'data-month': nmth, 'data-day': i+1});
+
+            if (moment([nyr, nmth, i+1]).isSame(origDt, 'day')) {
+              klass.push('mvc-boot-cal-orig');
+            }
+
+            classes.push(klass.join(' '));
+          }
+
+          this.$set('cal1.days', days);
+          this.$set('cal1.classes', classes);
+          this.$set('cal1.attrs', attrs);
+          this.$set('cal1.year', year);
+          this.$set('cal1.month', month);
+        },
+
+        cal1PrevYear: function(ev) {
+          this.$set('cal.currDt', this.$get('cal.currDt').subtract(1, 'months'));
+          this.cal1Display();
+        },
+
+        cal1NextYear: function(ev) {
+          this.$set('cal.currDt', this.$get('cal.currDt').add(1, 'months'));
+          this.cal1Display();
+        },
+
+        cal1Year: function(ev) {
+          this.cal3Init(1);
+        },
+
+        cal1Month: function(ev) {
+          this.cal2Init();
+        },
+
+        cal1DayClicked: function(ev) {
+          var td = $(ev.target).closest('td');
+          var year = td.attr('data-year');
+          var month = td.attr('data-month');
+          var day = td.attr('data-day');
+
+          this.$set('cal.currDt', moment([year, month, day]));
+          this.calDone();
+        },
+
+        /* CAL 2 */
+        cal2Init: function() {
+          this.calOpenPane(2);
+          this.cal2Display();
+        },
+
+        cal2Display: function() {
+          var dt = this.$get('cal.currDt');
+          this.$set('cal2.year', dt.format('YYYY'));
+        },
+
+        cal2PrevYear: function(ev) {
+          this.$set('cal.currDt', this.$get('cal.currDt').subtract(1, 'years'));
+          this.cal2Display();
+        },
+
+        cal2NextYear: function(ev) {
+          this.$set('cal.currDt', this.$get('cal.currDt').add(1, 'years'));
+          this.cal2Display();
+        },
+
+        cal2Year: function(ev) {
+          this.cal3Init(2);
+        },
+
+        cal2MonthClicked: function(ev) {
+          var month = parseInt($(ev.target).closest('td').attr('data-month'), 10);
+
+          this.$set('cal.currDt', this.$get('cal.currDt').month(month));
+          this.cal1Init();
+        },
+
+        /* CAL 3 */
+        cal3Init: function(src) {
+          var dt = this.$get('cal.currDt');
+          var year = '' + dt.year();
+          var y = parseInt(year.substr(year.length-1, 1), 10) - 1;
+          var first = dt.subtract(y, 'years').year();
+          var last = first + 19;
+
+          this.$set('cal3.first', first);
+          this.$set('cal3.last', last);
+          this.$set('cal3.src', src);
+
+          this.cal3Display();
+          this.calOpenPane(3);
+        },
+
+        cal3Display: function() {
+          var first = this.$get('cal3.first');
+          var last = this.$get('cal3.last');
+          var years = [];
+
+          for (var i=first; i<=last; i++) {
+            years.push(i);
+          }
+
+          this.$set('cal3.years', years);
+        },
+
+        cal3PrevDecade: function(ev) {
+          var first = this.$get('cal3.first') - 20;
+          var last = first + 19;
+
+          this.$set('cal3.first', first);
+          this.$set('cal3.last', last);
+
+          this.cal3Display();
+        },
+
+        cal3NextDecade: function(ev) {
+          var first = this.$get('cal3.first') + 20;
+          var last = first + 19;
+
+          this.$set('cal3.first', first);
+          this.$set('cal3.last', last);
+
+          this.cal3Display();
+        },
+
+        cal3YearClicked: function(ev) {
+          var year = parseInt($(ev.target).closest('td').find('span').text(), 10);
+          this.$set('cal.currDt', this.$get('cal.currDt').year(year));
+
+          if (parseInt(this.$get('cal3.src'), 10) == 1) {
+            this.cal1Init();
+          }
+          else {
+            this.cal2Init();
+          }
+        }
+      }
+    }
+
+    App.helpers.mvcBootCal = new MVC(cal[0], mvcObj);
+    App.helpers.mvcBootCal.init();
+
+  })();
+</script>

@@ -1,0 +1,552 @@
+<!--
+      var data = [
+        { heading: 'Group1',
+          active: true,
+          details: [
+            {text: 'Element-1-1 is a really long element, that\'s even longer now', value: '1-1', active: true},
+            {text: 'Element-1-2', value: '1-2', active: true},
+            {text: 'Element-1-3', value: '1-3', active: false},
+            {text: 'Element-1-4', value: '1-4', active: true},
+            {text: 'Element-1-5', value: '1-5', active: true},
+            {text: 'Element-1-6', value: '1-6', active: true},
+            {text: 'Element-1-7', value: '1-7', active: true},
+            {text: 'Element-1-8', value: '1-8', active: false},
+            {text: 'Element-1-9', value: '1-9', active: true},
+            {text: 'Element-1-10', value: '1-10', active: true},
+            {text: 'Element-1-11', value: '1-11', active: true},
+            {text: 'Element-1-12', value: '1-12', active: true},
+          ]
+        },
+        { heading: 'Group2',
+          active: false,
+          details: [
+            {text: 'Element-2-1', value: '2-1', active: true},
+            {text: 'Element-2-2', value: '2-2', active: true},
+            {text: 'Element-2-3', value: '2-3', active: true},
+            {text: 'Element-2-4', value: '2-4', active: true},
+            {text: 'Element-2-5', value: '2-5', active: true},
+            {text: 'Element-2-6', value: '2-6', active: true},
+          ]
+        },
+      ];
+
+      App.helpers.mvcMultiSel.selInit(data, {
+        title: "TITLE",
+        multiple: true,
+        inactive: true,
+        search: true,
+        defaults: '1-5',
+        callback: function(sels){console.log(sels)}
+      });
+-->
+<div id='mvc-multi-sel' class="modal fade" role="dialog" style='z-index: 1100'>
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <span mvc-text='opts.title'></span>
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" mvc-on='{click: "selClose"}'>
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="container-fluid">
+          <div class='row form-group'>
+            <div class='col-sm-4' mvc-show='this.$get("opts.search")'>
+              <div class="mvc-search" data-source='data' data-callback='selectedBySearch'>
+                <input type='text' class='form-control' mvc-value='search' placeholder='Search' mvc-on='{keyup: "schDo", focus: "schFocus", blur: "schBlur"}'>
+
+                <div class="mvc-search-container" mvc-each='schResults' mvc-class='schClass' tabIndex='-1'>
+                  <div class='row mvc-search-row' mvc-class='schResults[$index].classes' data-index='$index' mvc-on='{click: "schClicked"}'>
+                    <div class='col-sm-4'>
+                      <span mvc-html='schResults[$index].value'></span>
+                    </div>
+                    <div class='col-sm-8'>
+                      <span mvc-html='schResults[$index].text'></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class='col-sm-9' mvc-show='this.$get("opts.multiple")'>
+              <button class='btn btn-secondary' mvc-on='{click: "selectAll"}'>
+                All
+              </button>
+              <button class='btn btn-secondary' mvc-on='{click: "selectNone"}'>
+                None
+              </button>
+              <button class='btn btn-primary' mvc-on='{click: "complete"}'>
+                Complete
+              </button>
+            </div>
+          </div>
+
+          <div class='row'>
+            <div mvc-each='data' mvc-index='$index1' style='width: 100%'>
+              <div class='col-sm-4'>
+                <div class='card'>
+                  <div class='card-header mvc-multi-sel-header' mvc-on='{click: "headerClicked"}' data-index='$index1'>
+                    <span mvc-text='data[$index1].heading' mvc-class='data[$index1].classes'></span>
+                  </div>
+
+                  <div class='card-block' style='padding: 5px;'>
+                    <div class='card-text'>
+                      <div class='mvc-multi-sel-block'>
+                        <div mvc-each='data[$index1].details' mvc-index='$index2'>
+                          <div class='row' data-index1='$index1' data-index2='$index2' mvc-class='data[$index1].details[$index2].classes' mvc-on='{click: "rowClicked"}' class='mvc-multisel'>
+                            <div class='col-sm-4'>
+                              <span mvc-text='data[$index1].details[$index2].value'></span>
+                            </div>
+                            <div class='col-sm-7'>
+                              <span mvc-text='data[$index1].details[$index2].text'></span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  (function() {
+    var modal = $('#mvc-multi-sel');
+
+    var mvcObj = {
+      model: {
+        data: [],
+
+        opts: {
+          title: '',
+          cb: '',
+        },
+
+        schResults: [],
+        schIndex: -1,
+
+        schInFocus: false,
+        schClass: [],
+      },
+
+      lifecycle: {
+        created: function() {
+          var self = this;
+
+          return new Promise(function(resolve) {
+            resolve();
+          });
+        },
+
+        ready: function() {
+        }
+      },
+
+      controllers: {
+        selInit: function(data,opts) {
+          /*
+          Options:
+            title
+            inactive: T|F - T = remove inactive
+            defaults: [] - pre-selected items
+            multiple: T|F
+            search: T|F
+            callback: ()
+
+          var data = [
+            { heading: 'Group1',
+              active: true,
+              details: [
+                {text: 'Element-1-1 is a really long element', value: '1-1', active: true},
+                {text: 'Element-1-2', value: '1-2', active: true},
+                {text: 'Element-1-3', value: '1-3', active: false},
+                {text: 'Element-1-4', value: '1-4', active: true},
+                {text: 'Element-1-5', value: '1-5', active: true},
+                {text: 'Element-1-6', value: '1-6', active: true},
+                {text: 'Element-1-7', value: '1-7', active: true},
+                {text: 'Element-1-8', value: '1-8', active: false},
+                {text: 'Element-1-9', value: '1-9', active: true},
+                {text: 'Element-1-10', value: '1-10', active: true},
+                {text: 'Element-1-11', value: '1-11', active: true},
+                {text: 'Element-1-12', value: '1-12', active: true},
+              ]
+            },
+            { heading: 'Group2',
+              active: false,
+              details: [
+                {text: 'Element-2-1', value: '2-1', active: true},
+                {text: 'Element-2-2', value: '2-2', active: true},
+              ]
+            },
+          ];
+          */
+          console.log(data)
+          var self = this;
+
+          this.$set('opts', opts);
+
+          // remove inactive, if needed.
+          if (!opts.inactive) {
+            for (var i=0; i<data.length; i++) {
+              for (var j=0; j<data[i].details.length; j++) {
+                if (!data[i].details[j].active) {
+                  data[i].details.splice(j,1);    // spliced one is gone, so new one takes its place, so need to redo same index
+                  j--;
+                }
+              }
+
+              if (data[i].details.length == 0 || !data[i].active) {
+                data.splice(i,1);
+                i--;  // see j
+              }
+            }
+          }
+
+          // defaults
+          if ('defaults' in opts && opts.defaults) {
+            var dflts = opts.defaults;
+
+            if (!($.isArray(dflts))) dflts = [dflts];
+
+            data.forEach(function(entry) {
+              entry.details.forEach(function(dtl) {
+                if (dflts.indexOf(dtl.value) > -1) dtl.selected = true;
+              })
+            })
+          }
+
+          // build
+          data.forEach(function(entry) {
+            entry.classes = [];
+
+            if (!('active' in entry)) entry.active = true;
+            if (!entry.active) entry.classes.push('mvc-multi-sel-inactive');
+
+            entry.details.forEach(function(dtl) {
+              dtl.classes = ['mvc-multi-sel'];
+
+              if (!('active' in dtl)) dtl.active = true;
+              if (!('selected' in dtl)) dtl.selected = false;
+              if (!dtl.active) dtl.classes.push('mvc-multi-sel-inactive');
+              if (!opts.multiple) dtl.selected = false;
+              if (dtl.selected) dtl.classes.push('mvc-multi-sel-selected');
+            })
+          })
+
+          this.$set('data', data);
+
+          modal.modal({backdrop: 'static', keyboard: true, show: true});
+        },
+
+        selClose: function() {
+          this.selHide();
+        },
+
+        selectAll: function(idx) {
+          var data = this.$get('data');
+          var klass = 'mvc-multi-sel-selected';
+
+          for (var i=0; i<data.length; i++) {
+            if ((!isNaN(idx) && idx == i) || isNaN(idx)) {
+              for (var j=0; j<data[i].details.length; j++) {
+                if (!data[i].details[j].selected) {
+                  data[i].details[j].classes.push(klass);
+
+                  this.$set('data[' + i + '].details[' + j + '].classes', data[i].details[j].classes);
+                  this.$set('data[' + i + '].details[' + j + '].selected', true);
+                }
+              }
+            }
+          }
+        },
+
+        selectNone: function(idx) {
+          var data = this.$get('data');
+          var klass = 'mvc-multi-sel-selected';
+
+          for (var i=0; i<data.length; i++) {
+            if ((!isNaN(idx) && idx == i) || isNaN(idx)) {
+              for (var j=0; j<data[i].details.length; j++) {
+                if (data[i].details[j].selected) {
+                  var idx = data[i].details[j].classes.indexOf(klass);
+                  data[i].details[j].classes.splice(idx, 1);
+
+                  this.$set('data[' + i + '].details[' + j + '].classes', data[i].details[j].classes);
+                  this.$set('data[' + i + '].details[' + j + '].selected', false);
+                }
+              }
+            }
+          }
+        },
+
+        complete: function() {
+          var opts = this.$get('opts');
+          var sels = this.getAllSelected();
+          var cb = this.$get('opts.callback');
+
+          if (!opts.multiple) {
+            sels = (sels.length > 0) ? sels[0] : '';
+          }
+
+          cb(sels);
+
+          this.selHide();
+        },
+
+        rowClicked: function(ev) {
+          var data = this.$get('data');
+          var opts = this.$get('opts');
+          var el = $(ev.target).closest('div.row');
+          var idx1 = el.attr('data-index1');
+          var idx2 = el.attr('data-index2');
+          var entry = data[idx1].details[idx2];
+          var klass = 'mvc-multi-sel-selected';
+          var classes = entry.classes;
+          var selected = !entry.selected;
+
+          if (selected) {
+            classes.push(klass);
+          }
+          else {
+            var idx = classes.indexOf(klass);
+            classes.splice(idx,1);
+          }
+
+          this.$set('data[' + idx1 + '].details[' + idx2 + '].classes', classes);
+          this.$set('data[' + idx1 + '].details[' + idx2 + '].selected', selected);
+
+          if (selected && !opts.multiple) {
+            this.complete();
+          }
+        },
+
+        headerClicked: function(ev) {
+          var idx = $(ev.target).closest('div.card-header').attr('data-index');
+          var data = this.$get('data')[idx];
+          var opts = this.$get('opts');
+          var allSelected = true;
+
+          if (!opts.multiple) return;
+
+          // all entries selected?
+          data.details.some(function(entry) {
+            if (!entry.selected) {
+              allSelected = false;
+              return true;
+            }
+          })
+
+          if (!allSelected) {
+            this.selectAll(idx);
+          }
+          else {
+            this.selectNone(idx);
+          }
+        },
+
+        selectedBySearch: function(val) {
+          var data = this.$get('data');
+          var opts = this.$get('opts');
+          var klass = 'mvc-multi-sel-selected';
+
+          if (!opts.multiple) {
+            this.selectNone();
+          }
+
+          for (var i=0; i<data.length; i++) {
+            for (var j=0; j<data[i].details.length; j++) {
+              if (data[i].details[j].value == val) {
+                var classes = data[i].details[j].classes;
+                classes.push(klass);
+
+                this.$set('data[' + i + '].details[' + j + '].classes', data[i].details[j].classes);
+                this.$set('data[' + i + '].details[' + j + '].selected', true);
+              }
+            }
+          }
+
+          if (!opts.multiple) {
+            this.complete();
+          }
+        },
+
+        selHide: function() {
+          modal.modal('hide');
+        },
+
+        getAllSelected: function() {
+          var sel = [];
+          var data = this.$get('data');
+
+          data.forEach(function(entry) {
+            entry.details.forEach(function(dtl) {
+              if (dtl.selected) {
+                sel.push(dtl.value);
+              }
+            })
+          })
+
+          return sel;
+        },
+
+/* Search function */
+        schDo: function(ev) {
+          var key = ev.which;
+          var ds = $(ev.target).closest('div.mvc-search').attr('data-source');
+          var cb = $(ev.target).closest('div.mvc-search').attr('data-callback');
+          var sch = this.$get('search');
+          var data = this.$get(ds);
+          var res = this.$get('schResults');
+          var schIdx = this.$get('schIndex');
+          var schResults = [];
+          var rs = '<span class="mvc-search-highlight">';
+          var ls = '</span>';
+
+          var replaceIt = function(str, sch) {
+            sch = sch.toUpperCase();
+            var posn, start=0, rsl = rs.length; lsl = ls.length, schl = sch.length;
+            var newStr = '';
+
+            while(true) {
+              posn = str.toUpperCase().indexOf(sch, start);
+
+              if (posn == -1) {
+                newStr += str.substr(start);
+
+                break;
+              }
+
+              newStr += str.substr(start, posn-start) + rs + str.substr(posn, schl) + ls;
+              start = posn + schl;
+            }
+
+            newStr = newStr || str;
+            return newStr;
+          };
+
+          this.schToggle();
+
+          switch (key) {
+            case 0: // tab
+            case 13: // enter
+              // is one selected?
+              // close popup
+              if (schIdx > -1) {
+                var val = res[schIdx].value;
+                this[cb](val);
+              }
+
+              this.schClear();
+              break;
+
+            case 38:  // up arrow
+            case 40:  // down arrow
+              if (key == 38) {
+                if (--schIdx < 0) schIdx = res.length-1;
+              }
+              else {
+                if (++schIdx >= res.length) schIdx = 0;
+              }
+
+              res.forEach(function(entry) {
+                entry.classes = [];
+              })
+
+              res[schIdx].classes.push('mvc-search-row-chosen');
+
+              this.$set('schResults', res);
+              this.$set('schIndex', schIdx);
+              break;
+
+            default:
+              // search
+              if (sch.length > 0) {
+                sch = sch.toUpperCase();
+
+                data.forEach(function(entry) {
+                  entry.details.forEach(function(dtl) {
+                    if (dtl.value.toUpperCase().indexOf(sch) > -1 || dtl.text.toUpperCase().indexOf(sch) > -1) {
+                      var dtlx = _.cloneDeep(dtl);
+
+                      dtlx.value = replaceIt(dtlx.value, sch);
+                      dtlx.text = replaceIt(dtlx.text, sch);
+                      dtlx.classes = [];
+
+                      schResults.push(dtlx);
+                    }
+                  })
+                })
+              }
+
+              this.$set('schResults', schResults);
+              this.$set('schIndex', -1);
+          }
+        },
+
+        schClicked: function(ev) {
+          var data = this.$get('data');
+          var schResults = this.$get('schResults');
+          var idx = $(ev.target).closest('div.mvc-search-row').attr('data-index');
+          var cb = $(ev.target).closest('div.mvc-search').attr('data-callback');
+          var val = schResults[idx].value;
+
+          this[cb](val);
+          this.schClear();
+        },
+
+        schFocus: function() {
+          this.$set('schInFocus', true);
+          this.schToggle();
+        },
+
+        schBlur: function() {
+          // blur occurs before click, so need to keep results visible for a bit for click to happen
+          var self = this;
+
+          setTimeout(function() {
+            self.$set('schInFocus', false);
+            self.schToggle();
+          }, 250);
+        },
+
+        schToggle: function() {
+          var state = this.$get('schInFocus');
+          var sch = this.$get('search');
+
+          if (state && sch.length > 0) {
+            this.$set('schClass', ['open']);
+          }
+          else {
+            this.$set('schClass', []);
+          }
+        },
+
+        schClear: function() {
+          this.$set('search', '');
+          this.$set('schResults', []);
+          this.$set('schIndex', -1);
+
+          this.schToggle();
+        },
+      },
+
+      watch: {
+      },
+    }
+
+    App.helpers.mvcMultiSel = new MVC(modal[0], mvcObj);
+    App.helpers.mvcMultiSel.init();
+
+  })();
+</script>

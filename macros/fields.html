@@ -1,0 +1,119 @@
+{% macro Char(type='text', id='', maxlength='', mvc_value='', label, mvc_enabled='', mvc_disabled='', mvc_event_type='change', mvc_edit='') %}
+<div class="form-label-group">
+  <input type="{{type}}" id="{{id}}" maxlength="{{maxlength}}" mvc-value="{{mvc_value}}" mvc-event-type='{{mvc_event_type}}' mvc-edit='{{mvc_edit}}' mvc-enabled='{{mvc_enabled}}' mvc-disabled='{{mvc_disabled}}' placeholder='{{label}}' class="form-control" />
+  <label for="{{id}}">{{label}}</label>
+</div>
+<div mvc-show='this.$get("errors.{{mvc_value}}")'>
+  <small class='text-danger' mvc-text='errors.{{mvc_value}}'></small>
+</div>
+{% endmacro %}
+
+{% macro Text(id='', rows='10', cols='40', mvc_value='', label, mvc_enabled='', mvc_disabled='') %}
+<div class="form-label-group">
+  <textarea id="{{id}}" rows="{{rows}}" cols="{{cols}}" mvc-value="{{mvc_value}}" mvc-enabled='{{mvc_enabled}}' mvc-disabled='{{mvc_disabled}}' placeholder='{{label}}' class="form-control" /></textarea>
+  <label for="{{id}}">{{label}}</label>
+</div>
+<div mvc-show='this.$get("errors.{{mvc_value}}")'>
+  <small class='text-danger' mvc-text='errors.{{mvc_value}}'></small>
+</div>
+{% endmacro %}
+
+{% macro Password(type='password', id='', maxlength='', mvc_value='', label, mvc_enabled='', mvc_disabled='') %}
+<div class='input-group'>
+  <div class="form-label-group">
+    <input type="{{type}}" id="{{id}}" maxlength="{{maxlength}}" mvc-value="{{mvc_value}}" mvc-enabled='{{mvc_enabled}}' mvc-disabled='{{mvc_disabled}}' placeholder='{{label}}' class="form-control" />
+    <label for="{{id}}">{{label}}</label>
+  </div>
+  <div class='input-group-append' mvc-on='{click: "password:toggle"}'>
+    <div class="input-group-text strikediag passwordeye">&#128065;</div>
+  </div>
+</div>
+
+<div mvc-show='this.$get("errors.{{mvc_value}}")'>
+  <small class='text-danger' mvc-text='errors.{{mvc_value}}'></small>
+</div>
+{% endmacro %}
+
+{% macro Date(type='text', id='', maxlength='', mvc_value='', dateFormat='YYYY-MM-DD', label, mvc_enabled='', mvc_disabled='') %}
+<div class='input-group'>
+  <div class="form-label-group">
+    <input type="{{type}}" id="{{id}}" maxlength="{{maxlength}}" mvc-value="{{mvc_value}}|date['{{dateFormat}}']" mvc-edit="date" mvc-event-type="blur" mvc-enabled='{{mvc_enabled}}' mvc-disabled='{{mvc_disabled}}' placeholder='{{label}}' class="form-control" />
+    <label for="{{id}}">{{label}}</label>
+  </div>
+  <div class='input-group-append' mvc-on='{click: "date:bootcal"}'>
+    <div class="input-group-text">&#128197;</div>
+  </div>
+</div>
+
+<div mvc-show='this.$get("errors.{{mvc_value}}")'>
+  <small class='text-danger' mvc-text='errors.{{mvc_value}}'></small>
+</div>
+{% endmacro %}
+
+{% macro Time(type='text', id='', maxlength='', mvc_value='', timeFormat='hh:mm A', label, mvc_enabled='', mvc_disabled='') %}
+<div class='input-group'>
+  <div class="form-label-group">
+    <input type="{{type}}" id="{{id}}" maxlength="{{maxlength}}" mvc-value="{{mvc_value}}|time['{{timeFormat}}']" mvc-edit="time" mvc-event-type="blur" mvc-enabled='{{mvc_enabled}}' mvc-disabled='{{mvc_disabled}}' placeholder='{{label}}' class="form-control" />
+    <label for="{{id}}">{{label}}</label>
+  </div>
+  <div class='input-group-append' mvc-on='{click: "time:bootcal"}'>
+    <div class="input-group-text">&#128338;</div>
+  </div>
+</div>
+
+<div mvc-show='this.$get("errors.{{mvc_value}}")'>
+  <small class='text-danger' mvc-text='errors.{{mvc_value}}'></small>
+</div>
+{% endmacro %}
+
+{% macro Boolean(id='', mvc_checked='', label='') %}
+<div class="custom-control custom-checkbox pt-2">
+  <input type="checkbox" id="{{id}}" mvc-checked="{{mvc_checked}}" class="custom-control-input" />
+  <label class="custom-control-label label-color" for="{{id}}">{{label}}</label>
+</div>
+{% endmacro %}
+
+{% macro Integer(id='', min='1', max='999', step='1', mvc_value='', mvc_edit='integer', label='') %}
+<div class='input-group'>
+  <div class='input-group-prepend' mvc-on='{click: "stepper:minus"}'>
+    <div class="input-group-text">&mdash;</div>
+  </div>
+  <div class="form-label-group form-label-group-double">
+    <input type="text" id='{{id}}' min='{{min}}' max='{{max}}' step='{{step}}' mvc-value='{{mvc_value}}' mvc-edit='{{mvc_edit}}' mvc-role='stepper' placeholder='{{label}}' class="form-control mvc-boot-input-right" />
+    <label for="{{id}}">{{label}}</label>
+  </div>
+  <div class='input-group-append' mvc-on='{click: "stepper:plus"}'>
+    <div class="input-group-text">&plus;</div>
+  </div>
+</div>
+
+<div mvc-show='this.$get("errors.{{mvc_value}}")'>
+  <small class='text-danger' mvc-text='errors.{{mvc_value}}'></small>
+</div>
+{% endmacro %}
+
+{% macro SelectMVC(id='', size='10', mvc_value='', mvc_each='', valueField='', textField='', label='') %}
+<div class="form-label-group">
+  <select id="{{id}}" size='{{size}}' mvc-value="{{mvc_value}}" mvc-each='{{mvc_each}}' placeholder='{{label}}' class="form-control">
+    <option mvc-option='{value: "{{mvc_each}}[$index].{{valueField}}", text: "{{mvc_each}}[$index].{{textField}}"}'></option>
+  </select>
+  <label for="{{id}}">{{label}}</label>
+</div>
+<div mvc-show='this.$get("errors.{{mvc_value}}")'>
+  <small class='text-danger' mvc-text='errors.{{mvc_value}}'></small>
+</div>
+{% endmacro %}            
+
+{% macro SelectChoices(id='', size='10', mvc_value='', choices=[], label='') %}
+<div class="form-label-group">
+  <select id="{{id}}" mvc-value="{{mvc_value}}" placeholder='{{label}}' class="form-control">
+    {% for choice in choices %}
+    <option value='{{choice.value}}'>{{choice.text}}</option>
+    {% endfor %}
+  </select>
+  <label for="{{id}}">{{label}}</label>
+</div>
+<div mvc-show='this.$get("errors.{{mvc_value}}")'>
+  <small class='text-danger' mvc-text='errors.{{mvc_value}}'></small>
+</div>
+{% endmacro %}            

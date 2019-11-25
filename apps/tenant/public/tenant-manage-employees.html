@@ -1,0 +1,341 @@
+<page id='tenant-manage-employees' style='display: none'>
+  <section id='tenant-manage-employees-section'>
+    
+    <div class='row form-group justify-content-center'>
+      <div class='col-12 col-sm-3 mb-4'>
+        <div class='card'>
+          <div class='card-header'>
+            <div class='row'>
+              <div class='col-8'>
+                {{ buttons.btnsm(class='success', mvc_click='newEmp', text='+ New Employee') }}
+              </div>
+            </div>          
+          </div>
+          
+          <div class='card-body'>
+            <div class='row'>
+              <div class='col-12'>
+                <select mvc-each='employees' mvc-value='empPK' class='form-control' size='10' style='width: 100%'>
+                  <option mvc-option='{text: "employees[$index].name", value: "employees[$index].code"}'></option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class='col-12 col-sm-6'>
+        <div class='card'>
+          <div class='card-header'>
+            <div class='row'>
+              <div class='col-6 col-sm-3'>
+                {{ fields.Char(type='text', id=employee.code.id, maxlength=employee.code.maxLength, mvc_value='employee.code', mvc_event_type='blur', mvc_disabled='this.$get("empPK")', label=employee.code.verbose) }}
+              </div>
+              
+              <div class='col-sm-1'></div>
+              
+              <div class='col-12 col-sm-4'>
+                {{ fields.Boolean(id=employee.active.id, mvc_checked='employee.active', label=employee.active.verbose) }}
+              </div>
+            </div>          
+          </div>
+          
+          <div class='card-body'>
+            <div class='row form-group'>
+              <div class='col-12 col-sm-6'>
+                {{ fields.Char(type='text', id=employee.first.id, maxlength=employee.first.maxLength, mvc_value='employee.first', label=employee.first.verbose) }}
+              </div>
+              <div class='col-12 col-sm-6'>
+                {{ fields.Char(type='text', id=employee.last.id, maxlength=employee.last.maxLength, mvc_value='employee.last', label=employee.last.verbose) }}
+              </div>
+            </div>
+            
+            <div class='row form-group'>
+              <div class='col-12 col-sm-6'>
+                {{ fields.Char(type='text', id=employee.address.id, maxlength=employee.address.maxLength, mvc_value='employee.address', label=employee.address.verbose) }}
+              </div>
+              <div class='col-12 col-sm-6'>
+                {{ fields.Char(type='text', id=employee.city.id, maxlength=employee.city.maxLength, mvc_value='employee.city', label=employee.city.verbose) }}
+              </div>
+            </div>
+            
+            <div class='row form-group'>
+              <div class='col-12 col-sm-6'>
+                {{ fields.Char(type='text', id=employee.state.id, maxlength=employee.state.maxLength, mvc_value='employee.state', label=employee.state.verbose) }}
+              </div>
+              <div class='col-12 col-sm-6'>
+                {{ fields.Char(type='text', id=employee.zipcode.id, maxlength=employee.zipcode.maxLength, mvc_value='employee.zipcode', label=employee.zipcode.verbose) }}
+              </div>
+            </div>
+            
+            <div class='row form-group'>
+              <div class='col-12 col-sm-6'>
+                {{ fields.Char(type='text', id=employee.email.id, maxlength=employee.email.maxLength, mvc_value='employee.email', label=employee.email.verbose) }}
+              </div>
+              <div class='col-12 col-sm-6'>
+                {{ fields.Char(type='text', id=employee.phone.id, maxlength=employee.phone.maxLength, mvc_value='employee.phone', label=employee.phone.verbose) }}
+              </div>
+            </div>
+            
+            <div class='row form-group'>
+              <div class='col-12 col-sm-6'>
+                {{ fields.Password(type='password', id=employee.ssn.id, maxlength=employee.ssn.maxLength, mvc_value='employee.ssn', label=employee.ssn.verbose) }}
+              </div>
+              <div class='col-12 col-sm-6'>
+                {{ fields.Password(type='password', id=employee.password.id, maxlength=employee.password.maxLength, mvc_value='employee.password', label=employee.password.verbose) }}
+              </div>
+            </div>
+            
+            <div class='row'>
+              <div class='col-12 col-sm-6'>
+                {{ fields.SelectMVC(id=employee.dept.id, size='10', mvc_value='employee.dept', mvc_each='departments', valueField='code', textField='name', label=employee.dept.verbose) }}
+              </div>
+            </div>
+          </div>
+          
+          <div class='card-footer'>
+            <div class='row'>
+              <div class='col-12'>
+                <span mvc-hide='this.$get("empPK")'>
+                  {{ buttons.btn(class='primary', mvc_click='save', text='Create') }}
+                </span>
+                <span mvc-show='this.$get("empPK")'>
+                  {{ buttons.btn(class='primary', mvc_click='save', text='Update') }}
+                  {{ buttons.btn(class='success', mvc_click='empworkGrid', text='Pay Rates') }}
+                  {{ buttons.btn(class='warning', mvc_click='workGrid', text='Clock Ins') }}
+                  {{ buttons.btn(class='danger', mvc_click='delete', text='Delete') }}
+                </span>
+                {{ buttons.btn(class='secondary', mvc_click='clear', text='Clear') }}
+              </div>
+            </div>
+            
+            <div class='row mt-3' mvc-show='this.$get("empPK") && this.$get("dymos").length > 0'>
+              <div class='col-12 col-sm-4'>
+                {{ fields.SelectMVC(id='dymos', size='1', mvc_value='dymo', mvc_each='dymos', valueField='value', textField='text', label='Dymo Printers') }}
+              </div>
+              <div class='col-12 col-sm-4'>
+                {{ buttons.btn(class='primary', mvc_click='dymo', text='Print Label') }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class='row form-group justify-content-center' mvc-show='this.$get("empworkGridShow")'>
+      <div class='col-12 col-sm-3'>
+      </div>
+      
+      <div class='col-12 col-sm-6'>
+        <div class='card'>
+          <div class='card-header'>
+            <h6>Employee Pay Rates</h6>
+          </div>
+          <div class='card-body'>
+            <table class='table table-sm table-responsive'>
+              <thead>
+                <tr>
+                  <th>
+                    Work Code
+                  </th>
+                  <th>
+                    Pay Rate
+                  </th>
+                  <th></th>
+                  <th></th>
+                </tr>
+              </thead>
+              
+              <tbody mvc-each='empworks'>
+                <tr data-index='$index' style='line-height: 35px;'>
+                  <td>
+                    <select mvc-each='workcodes' mvc-value='empworks[$index].workcode' mvc-index='$index2' class='form-control'>
+                      <option mvc-option='{text: "workcodes[$index2].desc", value: "workcodes[$index2].code"}'></option>
+                    </select>    
+                    <div mvc-show='this.$get("empworks[$index].errors.workcode")'>
+                      <small class='text-danger' mvc-text='empworks[$index].errors.workcode'></small>
+                    </div>                          
+                  </td>
+                  <td>
+                    <input type="text" min='1.00' max='9999.99' step='.1' mvc-value='empworks[$index].payrate' mvc-edit='float' class="form-control mvc-boot-input-right" />
+                    <div mvc-show='this.$get("empworks[$index].errors.payrate")'>
+                      <small class='text-danger' mvc-text='empworks[$index].errors.payrate'></small>
+                    </div>                          
+                  </td>
+                  <td>
+                    {{ buttons.btnsm(class='primary', mvc_click='grid.save', text='Save') }}
+                  </td>
+                  <td>
+                    <span style='color: red; cursor: pointer' mvc-on='{click: "grid.delete"}'>&#x274C;</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>            
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class='row form-group justify-content-center' mvc-show='this.$get("workGridShow")'>
+      <div class='col-12'>
+        <div class='card'>
+          <div class='card-header'>
+            <h6>Pay Period Clock Ins</h6>
+          </div>
+          <div class='card-body'>
+            <table class='table table-sm table-responsive'>
+              <thead>
+                <tr>
+                  <th>
+                    Clock In Date
+                  </th>
+                  <th>
+                    Clock In Time
+                  </th>
+                  <th>
+                    Clock Out Date
+                  </th>
+                  <th>
+                    Clock Out Time
+                  </th>
+                  <th>
+                    Hours
+                  </th>
+                  <th>
+                    Tip$
+                  </th>
+                  <!--th>
+                    Pay
+                  </th-->
+                  <th>
+                    Work
+                  </th>
+                  <th></th>
+                  <th></th>
+                </tr>
+              </thead>
+              
+              <tbody mvc-each='works'>
+                <tr data-index='$index' style='line-height: 35px;'>
+                  <td>
+                    <div class='input-group'>
+                      <input type="text" maxlength="10" mvc-value="works[$index].sdate|date['MM/DD/YYYY']" mvc-edit="date" mvc-event-type="blur" mvc-on='{blur: "calcHours", change: "calcHours", mvchange: "calcHours"}' class="form-control" />
+                      <div class='input-group-append' mvc-on='{click: "date:bootcal"}'>
+                        <div class="input-group-text">&#128197;</div>
+                      </div>
+                    </div>
+
+                    <div mvc-show='this.$get("works[$index].errors.sdate")'>
+                      <small class='text-danger' mvc-text='works[$index].errors.sdate'></small>
+                    </div>
+                  </td>
+                  
+                  <td>
+                    <div class='input-group'>
+                      <input type="text" maxlength="8" mvc-value="works[$index].stime|time['HH:mm a']" mvc-edit="time" mvc-event-type="blur" mvc-on='{blur: "calcHours", change: "calcHours", mvchange: "calcHours"}' class="form-control" />
+                      <div class='input-group-append' mvc-on='{click: "time:bootcal"}'>
+                        <div class="input-group-text">&#128338;</div>
+                      </div>
+                    </div>                    
+                    <div mvc-show='this.$get("works[$index].errors.stime")'>
+                      <small class='text-danger' mvc-text='works[$index].errors.stime'></small>
+                    </div>
+                  </td>
+                  
+                  <td>
+                    <div class='input-group'>
+                      <input type="text" maxlength="10" mvc-value="works[$index].edate|date['MM/DD/YYYY']" mvc-edit="date" mvc-event-type="blur" mvc-on='{blur: "calcHours", change: "calcHours", mvchange: "calcHours"}' class="form-control" />
+                      <div class='input-group-append' mvc-on='{click: "date:bootcal"}'>
+                        <div class="input-group-text">&#128197;</div>
+                      </div>
+                    </div>
+
+                    <div mvc-show='this.$get("works[$index].errors.edate")'>
+                      <small class='text-danger' mvc-text='works[$index].errors.edate'></small>
+                    </div>
+                  </td>
+                  
+                  <td>
+                    <div class='input-group'>
+                      <input type="text" maxlength="8" mvc-value="works[$index].etime|time['HH:mm a']" mvc-edit="time" mvc-event-type="blur" mvc-on='{blur: "calcHours", change: "calcHours", mvchange: "calcHours"}' class="form-control" />
+                      <div class='input-group-append' mvc-on='{click: "time:bootcal"}'>
+                        <div class="input-group-text">&#128338;</div>
+                      </div>
+                    </div>                   
+                    <div mvc-show='this.$get("works[$index].errors.etime")'>
+                      <small class='text-danger' mvc-text='works[$index].errors.etime'></small>
+                    </div>                    
+                  </td>
+                  
+                  <td>
+                    <input type="text" min='.01' max='9999.99' step='.1' mvc-value='works[$index].hours' mvc-edit='float' mvc-on='{focus: "calcHours"}' class="form-control mvc-boot-input-right" />
+                    <div mvc-show='this.$get("works[$index].errors.hours")'>
+                      <small class='text-danger' mvc-text='works[$index].errors.hours'></small>
+                    </div>                          
+                  </td>
+                  
+                  <td>
+                    <input type="text" min='1.00' max='9999.99' step='.1' mvc-value='works[$index].tip' mvc-edit='float' class="form-control mvc-boot-input-right" />
+                    <div mvc-show='this.$get("works[$index].errors.tip")'>
+                      <small class='text-danger' mvc-text='works[$index].errors.tip'></small>
+                    </div>                          
+                  </td>
+                  
+                  <!--td>
+                    <input type="text" min='1.00' max='9999.99' step='.1' mvc-value='works[$index].pay' mvc-edit='float' class="form-control mvc-boot-input-right" />
+                    <div mvc-show='this.$get("works[$index].errors.pay")'>
+                      <small class='text-danger' mvc-text='works[$index].errors.pay'></small>
+                    </div>                          
+                  </td-->
+                  
+                  <td>
+                    <select mvc-each='empworks' mvc-value='works[$index].workcode' mvc-index='$index2' class='form-control'>
+                      <option mvc-option='{text: "empworks[$index2].desc", value: "empworks[$index2].workcode"}'></option>
+                    </select>    
+                    <div mvc-show='this.$get("works[$index].errors.workcode")'>
+                      <small class='text-danger' mvc-text='works[$index].errors.workcode'></small>
+                    </div>                          
+                  </td>
+                  
+                  <td>
+                    {{ buttons.btnsm(class='primary', mvc_click='grid.save', text='Save') }}
+                  </td>
+                  <td>
+                    <span style='color: red; cursor: pointer' mvc-on='{click: "grid.delete"}'>&#x274C;</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>            
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div aria-live="polite" aria-atomic="true" style="position: absolute; bottom: 5px; right: 0; z-index:20000">
+      <div style="position: absolute; bottom: 5px; right: 0; min-width: 350px">
+        <div class="toast" id="tenant-manage-employees-toast1" role="alert" aria-live="assertive" aria-atomic="true">
+          <div class="toast-header">
+            <strong class="mr-auto">TimeKeep</strong>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="toast-body">
+            <span mvc-text='toastMessage'></span>
+          </div>
+        </div>  
+      </div>
+    </div>
+  </section>
+  
+  <script>
+    (function() {
+      var page = $('#tenant-manage-employees');
+      var section = $('#tenant-manage-employees-section');
+      var path = '/employees';
+      var title = 'Payroll';
+
+      App.mvcs[section[0].id] = {mvcObj: App.mvcObjs.tenant_manage_employees, page: page, section: section, path: path, title: title};
+    })();
+  </script>
+</page>

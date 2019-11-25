@@ -1,0 +1,156 @@
+<div id='tenant-empclock-navbar'>
+  <nav class="navbar fixed-top navbar-expand-md navbar-light bg-primary">
+    <span class="navbar-brand mb-0 h1">TimeClock</span>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item" id='tenant-empclock-navbar-payroll'>
+          <a class="nav-link" href="#clockin">Clock In/Out</a>
+        </li>
+        <li class="nav-item">
+          <span class="nav-link" mvc-on='{click: "logout"}' style='cursor: pointer'>Logout</span>
+        </li>
+      </ul>
+      <span class="navbar-text">
+        {{TID}}
+      </span>
+    </div>
+  </nav>
+
+  <div class='row'>
+    <div class='col-6'>
+      <div class='page-heading'>
+      </div>
+    </div>
+    <div class='col-6'>
+      <div class='page-heading'>
+      </div>
+    </div>
+  </div>
+
+  <div class='row' mvc-show='!this.$get("loggedIn")'>
+    <div class='col-12'>
+      <div class="form-inline">
+        <input type='text' mvc-value='username' maxlength='20' mvc-on='{keyup: "key13"}' class='form-control mr-sm-2' placeholder='Employee ID' />
+        <input type='password' mvc-value='password' mvc-on='{keyup: "key13"}' maxlength='20' class='form-control mr-sm-2' placeholder='Password' />
+        <button class='btn btn-success mr-sm-2' mvc-on='{click: "login"}'>Login</button>
+      </div>      
+    </div>
+  </div>
+  
+  <div class='row form-group' mvc-show='this.$get("loggedIn")'>
+    <div class='col-12'>
+      <span style='font-size: 24px' mvc-text='empname'></span>
+    </div>
+  </div>
+      
+</div>
+
+<script type="text/javascript">
+  (function() {
+    var modalEl = '#tenant-empclock-navbar';
+
+    var mvcObj = {
+      model: {
+        username: '',
+        password: '',
+      },
+
+      lifecycle: {
+        created: function() {
+          var self = this;
+          
+          this.$set('loggedIn', false);
+          
+          App.subs.general.subscribe('loggedIn', function(tf) {
+            self.$set('loggedIn', tf);
+          })
+
+          return new Promise(function(resolve) {
+            resolve();
+          });
+        },
+
+        ready: function() {
+        }
+      },
+
+      controllers: {
+        key13: function(ev) {
+          if (ev.which == 13) {
+            this.login();
+          }
+        },
+
+        login: function() {
+          var self = this;
+          var tenant = 'neoc';
+          var username = this.$get('username');
+          var password = this.$get('password');
+          
+          App.subs.general.publish('loggedIn', false);
+          
+          if (!username) {
+            App.modals.alert('Employee ID is required');
+            return;
+          }
+          
+          if (!password) {
+            App.modals.alert('Password is required');
+            return;
+          }
+          
+          io.post({tenant, username, password}, '/tenant/empclock/login')
+          .then(function(res) {
+            if (res.status == 200) {
+              self.success(res.data);              
+            }
+            else {
+              self.failure();
+              App.modals.alert(res.data.errors.message);
+            }
+          })
+          .catch(function(err) {
+            App.modals.alert(err.errMsg)
+          })
+        },
+    
+        success: function(data) {  
+          /*
+            tenant_session cookie will have been set
+            Set CSRF value
+            Publish Logged In
+          */
+          io.CSRFToken = data.CSRFToken;
+          this.$set('empname', data.first + ' ' + data.last);
+
+          App.storage.employee = this.$get('username');
+          App.storage.password = this.$get('password');
+          App.subs.general.publish('loggedIn', true);
+	      },	  
+        
+        failure: function() {
+          App.subs.general.publish('loggedIn', false);
+        },
+        
+        logout: function() {
+          this.$set('username', '');
+          this.$set('password', '');
+          
+          App.subs.general.publish('loggedIn', false);
+          location = '{{home}}';
+        },
+      },
+
+      watch: {
+      }
+    }
+    
+    var navbar = new MVC($(modalEl)[0], mvcObj);
+    navbar.init();
+  })();
+</script>

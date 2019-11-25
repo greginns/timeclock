@@ -1,0 +1,189 @@
+<page id='tenant-manage-reports' style='display: none'>
+  <section id='tenant-manage-reports-section'>
+    <nav>
+      <div class="nav nav-tabs" id="report-tabs" role="tablist">
+        <a class="nav-item nav-link active" data-toggle="tab" href="#nav-dept" role="tab" aria-controls="nav-dept" aria-selected="true">Departments</a>
+        <a class="nav-item nav-link" data-toggle="tab" href="#nav-emp" role="tab" aria-controls="nav-emp" aria-selected="false">Employees</a>
+        <a class="nav-item nav-link" data-toggle="tab" href="#nav-work" role="tab" aria-controls="nav-work" aria-selected="false">Work Codes</a>
+        <a class="nav-item nav-link" data-toggle="tab" href="#nav-pay" role="tab" aria-controls="nav-pay" aria-selected="false">Pay Rates</a>
+        <a class="nav-item nav-link" data-toggle="tab" href="#nav-user" role="tab" aria-controls="nav-user" aria-selected="false">Users</a>
+      </div>
+    </nav>
+    
+    <div class="tab-content" id="nav-tabContent">
+      <div class="tab-pane fade show active" id="nav-dept" role="tabpanel" aria-labelledby="nav-dept-tab">
+        <br>
+        <div class='row form-group'>
+          <div class='col-12 col-sm-2'>
+            <div class="custom-control custom-radio custom-control-inline">
+              <input type="radio" id="deptActiveY" name="deptActive" mvc-checked='deptActive' value='Y' class="custom-control-input">
+              <label class="custom-control-label label-color" for="deptActiveY">Active</label>
+            </div>
+          </div>
+          
+          <div class='col-12 col-sm-2'>
+            <div class="custom-control custom-radio custom-control-inline">
+              <input type="radio" id="deptActiveN" name="deptActive" mvc-checked='deptActive' value='N' class="custom-control-input">
+              <label class="custom-control-label label-color" for="deptActiveN">Inactive</label>
+            </div>
+          </div>
+          
+          <div class='col-12 col-sm-2'>
+            <div class="custom-control custom-radio custom-control-inline">
+              <input type="radio" id="deptActiveA" name="deptActive" mvc-checked='deptActive' value='A' class="custom-control-input">
+              <label class="custom-control-label label-color" for="deptActiveA">All</label>
+            </div>
+          </div>      
+          
+          <div class='col-6 col-sm-2'>
+            {{ buttons.btnsm(class='success', mvc_click='deptRun', text='Run') }}
+          </div>
+        </div>
+      </div>
+      
+      <div class="tab-pane fade" id="nav-emp" role="tabpanel" aria-labelledby="nav-emp-tab">
+        <br>
+        <div class='row form-group'>
+          <div class='col-12 col-sm-2'>
+            <div class="custom-control custom-radio custom-control-inline">
+              <input type="radio" id="empActiveY" name="empActive" mvc-checked='empActive' value='Y' class="custom-control-input">
+              <label class="custom-control-label label-color" for="empActiveY">Active</label>
+            </div>
+          </div>
+          
+          <div class='col-12 col-sm-2'>
+            <div class="custom-control custom-radio custom-control-inline">
+              <input type="radio" id="empActiveN" name="empActive" mvc-checked='empActive' value='N' class="custom-control-input">
+              <label class="custom-control-label label-color" for="empActiveN">Inactive</label>
+            </div>
+          </div>
+          
+          <div class='col-12 col-sm-2'>
+            <div class="custom-control custom-radio custom-control-inline">
+              <input type="radio" id="empActiveA" name="empActive" mvc-checked='empActive' value='A' class="custom-control-input">
+              <label class="custom-control-label label-color" for="empActiveA">All</label>
+            </div>
+          </div>      
+                
+          <div class='col-6 col-sm-2'>
+            {{ buttons.btnsm(class='success', mvc_click='empRun', text='Run') }}
+          </div>
+        </div>    
+      </div>
+      
+      <div class="tab-pane fade" id="nav-work" role="tabpanel" aria-labelledby="nav-work-tab">
+        <br>
+        <div class='row form-group''>
+          <div class='col-12 col-sm-2'>
+            <div class="custom-control custom-radio custom-control-inline">
+              <input type="radio" id="workActiveY" name="workActive" mvc-checked='workActive' value='Y' class="custom-control-input">
+              <label class="custom-control-label label-color" for="workActiveY">Active</label>
+            </div>
+          </div>
+          
+          <div class='col-12 col-sm-2'>
+            <div class="custom-control custom-radio custom-control-inline">
+              <input type="radio" id="workActiveN" name="workActive" mvc-checked='workActive' value='N' class="custom-control-input">
+              <label class="custom-control-label label-color" for="workActiveN">Inactive</label>
+            </div>
+          </div>
+          
+          <div class='col-12 col-sm-2'>
+            <div class="custom-control custom-radio custom-control-inline">
+              <input type="radio" id="workActiveA" name="workActive" mvc-checked='workActive' value='A' class="custom-control-input">
+              <label class="custom-control-label label-color" for="workActiveA">All</label>
+            </div>
+          </div>      
+                      
+          <div class='col-6 col-sm-2'>
+            {{ buttons.btnsm(class='success', mvc_click='workRun', text='Run') }}
+          </div>
+        </div>    
+      </div>
+      
+      <div class="tab-pane fade" id="nav-pay" role="tabpanel" aria-labelledby="nav-pay-tab">
+        <br>
+        <div class='row form-group'>
+          <div class='col-12 col-sm-2'>
+            <div class="custom-control custom-radio custom-control-inline">
+              <input type="radio" id="payActiveY" name="payActive" mvc-checked='payActive' value='Y' class="custom-control-input">
+              <label class="custom-control-label label-color" for="payActiveY">Active</label>
+            </div>
+          </div>
+          
+          <div class='col-12 col-sm-2'>
+            <div class="custom-control custom-radio custom-control-inline">
+              <input type="radio" id="payActiveN" name="payActive" mvc-checked='payActive' value='N' class="custom-control-input">
+              <label class="custom-control-label label-color" for="payActiveN">Inactive</label>
+            </div>
+          </div>
+          
+          <div class='col-12 col-sm-2'>
+            <div class="custom-control custom-radio custom-control-inline">
+              <input type="radio" id="payActiveA" name="payActive" mvc-checked='payActive' value='A' class="custom-control-input">
+              <label class="custom-control-label label-color" for="payActiveA">All</label>
+            </div>
+          </div>      
+          
+          <div class='col-6 col-sm-2'>
+            {{ buttons.btnsm(class='success', mvc_click='payRun', text='Run') }}
+          </div>
+        </div>
+      </div>        
+      
+      <div class="tab-pane fade" id="nav-user" role="tabpanel" aria-labelledby="nav-user-tab">
+        <br>
+        <div class='row form-group'>
+          <div class='col-12 col-sm-2'>
+            <div class="custom-control custom-radio custom-control-inline">
+              <input type="radio" id="userActiveY" name="userActive" mvc-checked='userActive' value='Y' class="custom-control-input">
+              <label class="custom-control-label label-color" for="userActiveY">Active</label>
+            </div>
+          </div>
+          
+          <div class='col-12 col-sm-2'>
+            <div class="custom-control custom-radio custom-control-inline">
+              <input type="radio" id="userActiveN" name="userActive" mvc-checked='userActive' value='N' class="custom-control-input">
+              <label class="custom-control-label label-color" for="userActiveN">Inactive</label>
+            </div>
+          </div>
+          
+          <div class='col-12 col-sm-2'>
+            <div class="custom-control custom-radio custom-control-inline">
+              <input type="radio" id="userActiveA" name="userActive" mvc-checked='userActive' value='A' class="custom-control-input">
+              <label class="custom-control-label label-color" for="userActiveA">All</label>
+            </div>
+          </div>      
+                      
+          <div class='col-6 col-sm-2'>
+            {{ buttons.btnsm(class='success', mvc_click='userRun', text='Run') }}
+          </div>
+        </div>    
+      </div>    
+    </div>
+    
+    <div class='row form-group'>
+      <div class='col-6 col-sm-2' mvc-show='this.$get("report")'>
+        {{ buttons.btnsm(class='primary', mvc_click='share', text='Share') }}
+      </div>
+    </div>
+          
+    <div class='row form-group'>
+      <div class='col-12'>
+        <span mvc-html='report'></span>
+      </div>
+    </div>
+
+  </section>
+  
+  <script>
+    (function() {
+      var page = $('#tenant-manage-reports');
+      var section = $('#tenant-manage-reports-section');
+      var path = '/reports';
+      var title = 'Reports';
+
+      App.mvcs[section[0].id] = {mvcObj: App.mvcObjs.tenant_manage_reports, page: page, section: section, path: path, title: title};
+    })();
+  </script>
+</page>
