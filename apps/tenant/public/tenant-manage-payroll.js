@@ -55,7 +55,7 @@ App.mvcObjs.tenant_manage_payroll = {
       var config = this.$get('config');
       var source = this.$get('report');
       var filename = `payroll-${this.$get('startDate')}.pdf`;
-            
+      
       App.modals.share({config, source, filename});      
     },
     

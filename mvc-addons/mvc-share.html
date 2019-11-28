@@ -17,6 +17,7 @@
               <a class="nav-item nav-link active" id="share-print-tab" data-toggle="tab" href="#share-print" role="tab" aria-controls="share-print" aria-selected="true">Print</a>
               <a class="nav-item nav-link" id="share-download-tab" data-toggle="tab" href="#share-download" role="tab" aria-controls="share-download" aria-selected="false">Download</a>
               <a class="nav-item nav-link" id="share-email-tab" data-toggle="tab" href="#share-email" role="tab" aria-controls="share-email" aria-selected="false">Email</a>
+              <a class="nav-item nav-link" id="share-window-tab" data-toggle="tab" href="#share-window" role="tab" aria-controls="share-window" aria-selected="false">Window</a>
             </div>
           </nav>
           
@@ -127,7 +128,16 @@
                   {{ buttons.btn(class='primary', mvc_click='email', text='Send') }}
                 </div>
               </div>
-            </div>          
+            </div>   
+
+            <div class="tab-pane fade" id="share-window" role="tabpanel" aria-labelledby="share-window-tab">
+                <br>
+                <div class='row form-group'>
+                  <div class='col-12'>
+                    {{ buttons.btn(class='primary', mvc_click='newWindow', text='Open in New Window') }}
+                  </div>
+                </div>
+              </div>                     
           </div>   
                  
         </div>
@@ -281,6 +291,26 @@
             this.$set('error', resp.error);
           }
         },     
+
+        newWindow: function() {
+          var source = this.$get('source');
+          var html = `
+            <!DOCTYPE html>
+            <html>
+              <head>
+                <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+              </head>
+              <body>
+                ${source}
+              </body>
+            </html>
+          `;
+          var win = window.open("", '_window');
+
+          win.document.write(html);
+          //var win = window.open("data:text/html;charset=utf-8,hello world", '_window', "height=1200,width=1200");
+          //console.log(win)
+        },
         
         getPrinters: async function() {
           var config = this.$get('config');
