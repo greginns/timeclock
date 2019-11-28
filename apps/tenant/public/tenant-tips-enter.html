@@ -1,0 +1,74 @@
+<page id='tenant-tips-enter' style='display: none'>
+  <section id='tenant-tips-enter-section'>
+    <div mvc-show='this.$get("loggedIn")'>
+      <div class='row form-group'>
+        <div class='col-12 col-sm-4'>
+					<div class="input-group">
+						<input type="text" maxlength="10" mvc-value="date|date['MM/DD/YYYY']" mvc-edit="date" mvc-event-type="blur" xmvc-on='{blur: "dateChanged"}' class="form-control" />
+						<div class="input-group-append" mvc-on='{click: "date:bootcal"}'>
+							<div class="input-group-text">
+								📅
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class='col-12 col-sm-4'>
+					<select mvc-value='dept' mvc-each='depts' class='form-control'>
+						<option mvc-option='{text: "depts[$index].name", value: "depts[$index].code"}'></option>
+					</select>
+				</div>
+      </div>
+    
+      <div class='row form-group'>
+        <div class='col-12 col-sm-8'>
+					<table class='table table-sm'>
+						<thead>
+							<tr mvc-each='tipCodes'>
+								<th style='text-align: center; width: 25%'>
+									<span mvc-text='tipCodes[$index].desc'></span>
+								</th>
+							</tr>
+						</thead>
+						<tbody mvc-each='tipEmps'>
+							<tr data-index='$index'>
+								<td>
+									<span mvc-text='tipEmps[$index].name'></span>
+								</td>
+								<td>
+									<span mvc-html='tipEmps[$index].tip0'></span>
+								</td>
+								<td>
+									<span mvc-html='tipEmps[$index].tip1'></span>
+								</td>
+								<td>
+									<span mvc-html='tipEmps[$index].tip2'></span>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+        </div>
+			</div>
+			
+			<div class='row form-group'>
+				<div class='col-12 col-sm-8'>
+					<button class='btn btn-success' mvc-on='{click: "saveTips"}'>
+						Save Tips
+					</button>
+				</div>
+			</div>
+
+    </div>
+    
+  </section>
+  
+  <script>
+    (function() {
+      var page = $('#tenant-tips-enter');
+      var section = $('#tenant-tips-enter-section');
+      var path = '/enter';
+      var title = 'Tip Entry';
+
+      App.mvcs[section[0].id] = {mvcObj: App.mvcObjs.tenant_tips_enter, page: page, section: section, path: path, title: title};
+    })();
+  </script>
+</page>

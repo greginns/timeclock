@@ -128,6 +128,21 @@ Router.add(new RouterMessage({
   options: {needLogin: false, needCSRF: false, allowAnon: true}
 }));
 
+// tips page
+Router.add(new RouterMessage({
+  method: 'get',
+  path: ['/tenant/tips/:etc', '/tenant/tips'], 
+  fn: async function(req, res) {
+    var rm = new ResponseMessage();
+    var tm = await services.output.tips(req);
+
+    rm.convertFromTravel(tm);
+    return rm;
+  }, 
+  options: {needLogin: false, needCSRF: false, allowAnon: true}
+}));
+
+// Models
 // department
 Router.add(new RouterMessage({
   method: 'get',
@@ -562,6 +577,59 @@ Router.add(new RouterMessage({
     return rm;
   },
   options: {needLogin: true, needCSRF: true, allowAnon: true}
+}));
+
+// Tips
+Router.add(new RouterMessage({
+  method: 'post',
+  path: '/tenant/tips/login', 
+  fn: async function(req, res) {
+    var rm = new ResponseMessage();
+    var tm = await services.tips.login(req.body);
+  
+    rm.convertFromTravel(tm);
+    return rm;
+  },
+  options: {needLogin: false, needCSRF: false, allowAnon: true}
+}));
+
+Router.add(new RouterMessage({
+  method: 'get',
+  path: '/tenant/tips/:dept/:date', 
+  fn: async function(req, res) {
+    var rm = new ResponseMessage();
+    var tm = await services.tips.get({pgschema: req.TID, dept: req.params.dept, date: req.params.date});
+  
+    rm.convertFromTravel(tm);
+    return rm;
+  },
+  options: {needLogin: false, needCSRF: false}
+}));
+
+Router.add(new RouterMessage({
+  method: 'post',
+  path: '/tenant/tips/:emp', 
+  fn: async function(req, res) {
+    var rm = new ResponseMessage();
+    var tm = await services.tips.insert({pgschema: req.TID, emp: req.params.emp, dt: req.body.date, work: req.body.work, tip: req.body.tip});
+  
+    rm.convertFromTravel(tm);
+    return rm;
+  },
+  options: {needLogin: false, needCSRF: false}
+}));
+
+Router.add(new RouterMessage({
+  method: 'put',
+  path: '/tenant/tips/:id', 
+  fn: async function(req, res) {
+    var rm = new ResponseMessage();
+    var tm = await services.tips.update({pgschema: req.TID, id: req.params.id, tip: req.body.tip});
+  
+    rm.convertFromTravel(tm);
+    return rm;
+  },
+  options: {needLogin: false, needCSRF: false}
 }));
 
 // payroll

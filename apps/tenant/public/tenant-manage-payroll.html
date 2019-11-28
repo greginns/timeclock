@@ -31,6 +31,11 @@
             {{ buttons.btn(class='primary', mvc_click='run', text='Run') }}
           </div>
           <div class='col-6' mvc-show='this.$get("showClose")'>
+            <div class="custom-control custom-checkbox custom-control-inline">
+              <input type="checkbox" id="payDetail" mvc-checked='details' class="custom-control-input">
+              <label class="custom-control-label label-color" for="payDetail">Details</label>
+            </div>
+            
             {{ buttons.btn(class='success', mvc_click='share', text='Share') }}
             {{ buttons.btn(class='success', mvc_click='close', text='Close') }}
           </div>

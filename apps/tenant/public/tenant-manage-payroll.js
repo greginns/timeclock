@@ -142,6 +142,10 @@ App.mvcObjs.tenant_manage_payroll = {
           this.$set('endDate', p.edate);
         }
       }, this);
+    },
+
+    'details': function(nv) {
+      $('#details').toggle();
     }
   }
 }

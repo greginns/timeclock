@@ -25,6 +25,15 @@
               <br>
               <div class='row form-group'>
                 <div class='col-12 col-sm-9'>
+                    <div class="custom-control custom-checkbox custom-control-inline">
+                      <input type="checkbox" id="rptLandscape" mvc-checked='landscape' class="custom-control-input">
+                      <label class="custom-control-label label-color" for="rptLandscape">Landscape</label>
+                    </div>
+                </div>
+              </div>
+
+              <div class='row form-group'>
+                <div class='col-12 col-sm-9'>
                   {{ fields.SelectMVC(id='rptPrinters', size='1', mvc_value='printer', mvc_each='printers', valueField='printer', textField='printer', label='Printers') }}
                 </div>
                 <div class='col-12 col-sm-3' mvc-show='this.$get("printer")'>
@@ -182,7 +191,8 @@
           var config = this.$get('config');
           var source = this.$get('source');
           var printer = this.$get('printer');
-          var resp = await App.utils.nwio.print({config, text: source, printer});
+          var landscape = this.$get('landscape');
+          var resp = await App.utils.nwio.print({config, text: source, landscape, printer});
 
           this.$set('error', '');
 

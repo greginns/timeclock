@@ -85,14 +85,18 @@ App.mvcObjs.tenant_empclock_clockin = {
     
     getEmpwork: function() {
       var self = this;
+      var nonTip = [];
       
       io.get({}, '/tenant/empclock/empwork/' + App.storage.employee)
       .then(function(res){
         if (res.status == 200) {
-          self.$set('empworks', res.data);
-          console.log(self.$get('empworks'))
-          self.$set('workcode', (res.data.length>0) ? res.data[0].workcode : '');
+          res.data.forEach(function(ew) {
+            if (ew.Workcode.method !='T') nonTip.push(ew);
+          })
         }
+
+        self.$set('empworks', nonTip);
+        self.$set('workcode', (res.data.length>0) ? res.data[0].workcode : '');
       })
     },
     
@@ -105,6 +109,7 @@ App.mvcObjs.tenant_empclock_clockin = {
           res.data.forEach(function(d) {
             d.sdate = d.sdate.split('T')[0];
             if (d.edate) d.edate = d.edate.split('T')[0];
+            d.tippy = parseFloat(d.tip) > 0;
           })
           
           self.$set('works', res.data);

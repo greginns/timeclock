@@ -26,9 +26,9 @@
                 <th>
                   Hours
                 </th>
-                <!--th>
-                  Pay
-                </th-->
+                <th>
+                  Tip
+                </th>
                 <th>
                 </th>
               </tr>
@@ -38,18 +38,18 @@
               <tr>
                 <td>
                   <span mvc-text='works[$index].sdate'></span>
-                  <span mvc-text='works[$index].stime'></span>
+                  <span mvc-text='works[$index].stime' mvc-hide='this.$get("works[$index].tippy")'></span>
                 </td>
                 <td>
                   <span mvc-text='works[$index].edate'></span>
-                  <span mvc-text='works[$index].etime'></span>
+                  <span mvc-text='works[$index].etime' mvc-hide='this.$get("works[$index].tippy")'></span>
                 </td>
                 <td>
-                  <span mvc-text='works[$index].hours'></span>
+                  <span mvc-text='works[$index].hours' mvc-hide='this.$get("works[$index].tippy")'></span>
                 </td>
-                <!--td>
-                  <span mvc-text='works[$index].pay'></span>
-                </td-->
+                <td>
+                  <span mvc-text='works[$index].tip'></span>
+                </td>
                 <td>
                   <span mvc-text='works[$index].Workcode.desc'></span>
                 </td>

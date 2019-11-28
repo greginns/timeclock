@@ -19,6 +19,8 @@
       <th class='text-right'>Reg</th>
       <th class='text-right'>OT</th>
       <th class='text-right'>Total</th>
+      <th class='text-right'>BiWkly</th>
+      <th class='text-right'>Daily</th>
       <th class='text-right'>Rate</th>
     </tr>  
   </thead>
@@ -30,6 +32,7 @@
           {{deptInfo.name}}
         </td>
       </tr>
+
       {% for empInfo in deptInfo.employees %}
         <tr>
           <td>
@@ -49,12 +52,14 @@
             {{empInfo.total | hhmm}}
           </td>
           <td></td>
+          <td></td>
+          <td></td>
         </tr>
         {% for workInfo in empInfo.works %}
           {% for weekInfo in workInfo.weeks %}
             <tr>
               <td></td>
-              <td>{% if loop.first %}{{workInfo.code}} {% endif %}</td>
+              <td>{% if loop.first %} {{workInfo.code}} {% else %} {{workInfo.desc}} {% endif %}</td>
               <td class='text-right'>{{weekInfo.days[0] | hhmm}}</td>
               <td class='text-right'>{{weekInfo.days[1] | hhmm}}</td>
               <td class='text-right'>{{weekInfo.days[2] | hhmm}}</td>
@@ -65,11 +70,92 @@
               <td class='text-right'>{{weekInfo.reg | hhmm}}</td>
               <td class='text-right'>{{weekInfo.ot | hhmm}}</td>
               <td class='text-right'>{{weekInfo.total | hhmm}}</td>
-              <td class='text-right'>{{weekInfo.rate}}</td>
+              <td class='text-right'>{% if loop.first %} {% else %} {{weekInfo.biwkly | hhmm}} {% endif %}</td>
+              <td class='text-right'>{{weekInfo.daily}}</td>
+              <td class='text-right'>{% if loop.first %} {% else %} {{weekInfo.rate}} {% endif %}</td>
             </tr>
           {% endfor %}
         {% endfor %}
+
+        <tr id='details' style='display: none'>
+          <td></td>
+          <td colspan='11'>
+            <table>
+              <thead>
+                <tr>
+                  <th>
+                    Clock In
+                  </th>
+                  <th>
+                    Clock Out
+                  </th>
+                  <th>
+                    Hours
+                  </th>
+                  <th>
+                    Tip
+                  </th>
+                  <th>
+                  </th>
+                </tr>
+              </thead>
+              {% for work in empInfo.work %}
+              <tbody>
+                <tr>
+                  <td>
+                    {{work.sdate | localDate}}
+                    {% if work.tippy %} {% else %} {{work.sdate | localTime}} {% endif %}
+                  </td>
+                  <td>
+                    {{work.edate | localDate}}
+                    {% if work.tippy %} {% else %} {{work.edate | localTime}} {% endif %}
+                  </td>
+                  <td class='text-right'>
+                    {% if work.tippy %} {% else %} {{work.hours}} {% endif %}
+                  </td>
+                  <td class='text-right'>
+                    {{work.tip}}
+                  </td>
+                  <td>
+                    {{work['Workcode.desc']}}
+                  </td>
+                </tr>
+              </tbody>
+              {% endfor %}
+            </table>
+            <div style='page-break-after: always'></div>
+            <div style='page-break-before: always'></div>
+          </td>
+        </tr>
       {% endfor %}
+
     {% endfor %}        
   </tbody>
+
+  <tfoot>
+    <tr>
+      <th colspan='15'>
+        <hr>
+      </th>
+    </tr>
+    <tr>
+      <td></td>
+      <td colspan='8'>
+        Week 1:&nbsp;&nbsp;{{totals.weeks[0] | hhmm}} &nbsp;&nbsp;&nbsp;&nbsp;
+        Week 2:&nbsp;&nbsp;{{totals.weeks[1] | hhmm}}
+      </td>
+      <td class='text-right'>
+        {{totals.reg | hhmm}}
+      </td>
+      <td class='text-right'>
+        {{totals.ot | hhmm}}
+      </td>
+      <td class='text-right'>
+        {{totals.total | hhmm}}
+      </td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tfoot>
 </table>

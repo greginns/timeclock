@@ -12,6 +12,8 @@ const {Session, Tenant} = require(root + '/models/adminModels.js')(false);
 const {JSONError, UserError, NunjucksError, InvalidUserError} = require(root + '/lib/errors.js');
 const {TravelMessage} = require(root + '/lib/messages.js');
 const pgschema = 'public';
+const dateFormat = 'MM/DD/YYYY';
+const timeFormat = 'hh:mm A';
 
 const makeCSRF = async function(tenant, user) {
   // tenant and user are their codes
@@ -80,8 +82,8 @@ module.exports = {
       ctx.employee = Employee.getColumnDefns();
       ctx.workcode = Workcode.getColumnDefns();
       ctx.user = User.getColumnDefns();
-      ctx.dateFormat = 'MM/DD/YYYY';
-      ctx.timeFormat = 'hh:mm A';
+      ctx.dateFormat = dateFormat;
+      ctx.timeFormat = timeFormat;
       ctx.TID = req.TID;
       ctx.home = config.home;
 
@@ -104,13 +106,35 @@ module.exports = {
       var tm = new TravelMessage();
 
       ctx.workcode = Workcode.getColumnDefns();
-      ctx.dateFormat = 'MM/DD/YYYY';
-      ctx.timeFormat = 'hh:mm A';
+      ctx.dateFormat = dateFormat;
+      ctx.timeFormat = timeFormat;
       ctx.TID = req.TID;
       
       try {
         nj = nunjucks.configure([root + '/apps/tenant/public', root + '/apps', root + '/macros', root + '/mvc-addons'], { autoescape: true });
         tm.data = nj.render('tenant-empclock.html', ctx);
+        tm.type = 'html';
+      }  
+      catch(err) {
+        tm.err = tm.err = new NunjucksError(err);
+      }
+      
+      return tm;
+    },
+    
+    tips: async function(req) {
+      // Tips Page
+      var ctx = {};
+      var nj;
+      var tm = new TravelMessage();
+
+      ctx.dateFormat = dateFormat;
+      ctx.timeFormat = timeFormat;
+      ctx.TID = req.TID;
+      
+      try {
+        nj = nunjucks.configure([root + '/apps/tenant/public', root + '/apps', root + '/macros', root + '/mvc-addons'], { autoescape: true });
+        tm.data = nj.render('tenant-tips.html', ctx);
         tm.type = 'html';
       }  
       catch(err) {
@@ -154,7 +178,7 @@ module.exports = {
 
       if (!token) return false;
 
-      tm = await CSRF.selectOne({pgschema: TID, pks: token})
+      tm = await CSRF.selectOne({pgschema: TID, pks: token});
       if (tm.err) return false;
 
       return tm.data.user == user.code;    
@@ -219,7 +243,6 @@ module.exports = {
     return tm;
   },
 
-// Departments
   department: {
     get: async function({pgschema = '', rec = {}} = {}) {
       // get one or more departments
@@ -256,7 +279,7 @@ module.exports = {
       // get one or more employees
       return await Employee.select({pgschema, rec});
     },
-    
+
     insert: async function({pgschema = '', rec = {}} = {}) {
       // Insert Record
       var tobj = new Employee(rec);
@@ -581,6 +604,7 @@ module.exports = {
       var edate = new Date(sdate); edate.setDate(edate.getDate()+days-1);
       var sql = jsonToQuery(query, 'tenant', pgschema, {});
       var stmt = {text: sql, values: [sdate, edate]};
+      var totals = {weeks: {0: 0, 1: 0}, reg:0, ot: 0, total: 0};
 
       tm = await execQuery(stmt);
       if (tm.isBad()) return tm;
@@ -613,15 +637,20 @@ module.exports = {
         // setup structure
         if (!(dcode in data)) data[dcode] = {code: dcode, name: rec['Department.name'], employees: {}};
         if (!(ecode in data[dcode].employees)) data[dcode].employees[ecode] = 
-          {code: ecode, last: rec['Employee.last'], first: rec['Employee.first'], weeks: [0,0], reg: 0, ot: 0, total: 0, works: {}};
+          {code: ecode, last: rec['Employee.last'], first: rec['Employee.first'], weeks: [0,0], reg: 0, ot: 0, total: 0, works: {}, work: []};
         if (!(wcode in data[dcode].employees[ecode].works)) {
           data[dcode].employees[ecode].works[wcode] = {code: wcode, desc: rec['Workcode.desc'], method: rec['Workcode.method'], weeks: [{},{}]};
-          data[dcode].employees[ecode].works[wcode].weeks[0] = {days: [0,0,0,0,0,0,0], reg: 0, ot: 0, total: 0, tip: 0, rate: rate.toFixed(2)}
-          data[dcode].employees[ecode].works[wcode].weeks[1] = {days: [0,0,0,0,0,0,0], reg: 0, ot: 0, total: 0, tip: 0, rate: rate.toFixed(2)};
+          data[dcode].employees[ecode].works[wcode].weeks[0] = {days: [0,0,0,0,0,0,0], reg: 0, ot: 0, total: 0, tip: 0, biwkly: '', daily: 0, rate: rate.toFixed(2)}
+          data[dcode].employees[ecode].works[wcode].weeks[1] = {days: [0,0,0,0,0,0,0], reg: 0, ot: 0, total: 0, tip: 0, biwkly: 0, daily: 0, rate: rate.toFixed(2)};
         }        
         
         // fill structure
-        if (rec['Workcode.method'] != 'T') {
+        let method = rec['Workcode.method'];
+
+        rec.tippy = (method == 'T');
+        data[dcode].employees[ecode].work.push(rec);
+
+        if (method != 'T') {
           // ot hours yet?
           let reg=0, ot=0;
           
@@ -642,6 +671,14 @@ module.exports = {
           data[dcode].employees[ecode].works[wcode].weeks[wkno].reg += reg;
           data[dcode].employees[ecode].works[wcode].weeks[wkno].ot += ot;
           data[dcode].employees[ecode].works[wcode].weeks[wkno].total += rec.hours;
+          data[dcode].employees[ecode].works[wcode].weeks[1].biwkly += rec.hours;
+
+          if (method == 'D' || method == 'F') data[dcode].employees[ecode].works[wcode].weeks[wkno].daily += 1;
+
+          totals.weeks[wkno] += rec.hours;
+          totals.reg += reg;
+          totals.ot += ot;
+          totals.total += rec.hours;
         }
         else {
           data[dcode].employees[ecode].works[wcode].weeks[wkno].tip += rec.tip;
@@ -666,6 +703,7 @@ module.exports = {
           eobj.reg = data[dept].employees[emp].reg;
           eobj.ot = data[dept].employees[emp].ot;
           eobj.total = data[dept].employees[emp].total;
+          eobj.work = data[dept].employees[emp].work;
           eobj.works = [];
           
           for (var work in data[dept].employees[emp].works) {
@@ -706,8 +744,16 @@ module.exports = {
           
           return Math.floor(dec) + ':' + ('0' + mins).slice(-2);
         });
+
+        nj.addFilter('localDate', function(dt) {
+          return moment(dt).format(dateFormat);
+        });
+
+        nj.addFilter('localTime', function(dt) {
+          return moment(dt).format(timeFormat);
+        })
         
-        tm.data = nj.render('rpt-payroll.html', {data: sorted, startDate: sdate.toLocaleDateString(), endDate: edate.toLocaleDateString()});
+        tm.data = nj.render('rpt-payroll.html', {data: sorted, startDate: sdate.toLocaleDateString(), endDate: edate.toLocaleDateString(), totals});
         tm.type = 'html';
       }  
       catch(err) {
@@ -725,6 +771,70 @@ module.exports = {
     },    
   },
   
+  tips: {
+    login: async function(body) {
+      var tm
+      var CSRFToken;
+
+      tm = await module.exports.auth.login(body);
+      if (tm.isBad()) return new TravelMessage({data: '', type: 'text', err: new InvalidUserError('User')});
+
+      CSRFToken = await makeCSRF(body.tenant, body.username);
+      
+      // Reply with token, and cookie from login
+      tm.data = {CSRFToken};
+      tm.type = 'json';
+
+      return tm;
+    },
+
+    get: async function({pgschema='', dept='', date = ''} = {}) {
+      var tm;
+      var query = {
+        Work: {
+          columns: ['id','tip'],
+          innerJoin: [
+            {Employee: {
+              columns: ['code'],
+              innerJoin: [
+                {Department: {
+                  columns: ['code']
+                }}
+              ]
+            }},
+            {Workcode: {
+              columns: ['code']
+            }}
+          ],
+          where: 'WHERE "Workcode"."method" = \'T\' AND "Department"."code" = $1 AND "Work"."sdate" = $2'
+        }
+      }
+
+      return jsonQueryExecify({query, group: 'tenant', pgschema, values: [dept, date]});      
+    },
+
+    insert: async function({pgschema='', emp='', dt='', work='', tip=''}={}) {
+      var tm = (new Date()).toJSON().split('T')[1];
+      var sdate = dt;
+      var edate = dt;
+      var stime = tm;
+      var etime = tm;
+      var hours = 0;
+      var rec = new Work({employee: emp, workcode: work, sdate, stime, edate, etime, hours, tip});
+
+      return rec.insertOne({pgschema});
+    },
+
+    update: async function({pgschema, id, tip}={}) {
+      if (!id) return new TravelMessage({err: new UserError('No ID Supplied')});
+          
+      rec = {id, tip};
+      var tobj = new Work(rec);
+        
+      return await tobj.updateOne({pgschema});      
+    }
+  },    
+  
   reports: {
     getParams: async function({pgschema} = {}) {
       var config = await getAppConfig(pgschema);
@@ -738,7 +848,7 @@ module.exports = {
       return tm;
     },
     
-    depts: async function({pgschema={}, active='A'} = {}) {
+    depts: async function({pgschema='', active='A'} = {}) {
       var rec = (active == 'A') ? {} : {active: (active == 'Y') ? true : false};
       var depts = await Department.select({pgschema, rec});
       var tm = new TravelMessage();
@@ -758,7 +868,7 @@ module.exports = {
       return tm;      
     },
   
-    emps: async function({pgschema={}, active='A'} = {}) {
+    emps: async function({pgschema='', active='A'} = {}) {
       var rec = (active == 'A') ? {} : {active: (active == 'Y') ? true : false};
       var emps = await Employee.select({pgschema, rec});
       var tm = new TravelMessage();
@@ -778,7 +888,7 @@ module.exports = {
       return tm;      
     },
     
-    works: async function({pgschema={}, active='A'} = {}) {
+    works: async function({pgschema='', active='A'} = {}) {
       var rec = (active == 'A') ? {} : {active: (active == 'Y') ? true : false};
       var works = await Workcode.select({pgschema, rec});
       var tm = new TravelMessage();
