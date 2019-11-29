@@ -168,8 +168,10 @@ var buildJSON = async function() {
 }
 
 var initUser = async function() {
-  var rec = {code: 'monica', name: 'Monica Eurich', email: 'monicae@neoc.com', password: 'adriana9', active: true};
-  var tm = await models.admin.User.insertOne({pgschema, rec});
+  var rec = {code: 'greg', name: 'Greg Miller', email: 'greg@reservation-net.com', password: 'herbie99', active: true}
+  //var rec = {code: 'monica', name: 'Monica Eurich', email: 'monicae@neoc.com', password: 'adriana9', active: true};
+  var user = new User(rec);
+  var tm = await models.tenant.User.insertOne({pgschema, rec});
   console.log(tm)
 }
 

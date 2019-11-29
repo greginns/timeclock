@@ -1,3 +1,4 @@
 node_modules/
 *.bak
 tenant-data/neoc/appConfig.json
+./config.json

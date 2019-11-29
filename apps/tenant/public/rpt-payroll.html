@@ -1,7 +1,7 @@
 <table class='table table-sm'>
   <thead>
     <tr>
-      <th colspan='13' align='center'>
+      <th colspan='15' align='center'>
         Payroll Closeout {{startDate}} - {{endDate}}
       </th>
     </tr>
@@ -28,7 +28,7 @@
   <tbody>
     {% for deptInfo in data %}
       <tr>
-        <td colspan='12'>
+        <td colspan='15'>
           {{deptInfo.name}}
         </td>
       </tr>
@@ -77,7 +77,8 @@
           {% endfor %}
         {% endfor %}
 
-        <tr id='details' style='display: none'>
+        <tr class='details' style='display: block'>
+          <td></td>
           <td></td>
           <td colspan='11'>
             <table>
@@ -131,7 +132,9 @@
 
     {% endfor %}        
   </tbody>
+</table>
 
+<table class='table table-sm'>
   <tfoot>
     <tr>
       <th colspan='15'>
