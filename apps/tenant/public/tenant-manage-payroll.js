@@ -38,6 +38,8 @@ App.mvcObjs.tenant_manage_payroll = {
       var edate = new Date(this.$get('endDate'));
       var today = new Date();
       var res;
+
+      this.$set('details', true);
       
       if (today < edate) {
         App.modals.alert('Period is not yet over');
@@ -55,7 +57,7 @@ App.mvcObjs.tenant_manage_payroll = {
     share: async function() {
       var config = this.$get('config');
       var source = this.$get('report');
-      var filename = `payroll-${this.$get('startDate')}.pdf`;
+      var filename = `payroll-${this.$get('startDate')}`;
 
       App.modals.share({config, source, filename});      
     },

@@ -202,7 +202,8 @@
           var source = this.$get('source');
           var printer = this.$get('printer');
           var landscape = this.$get('landscape');
-          var resp = await App.utils.nwio.print({config, text: source, landscape, printer});
+          var popts = {landscape, hdrsAndftrs: true, copies: 1};
+          var resp = await App.utils.nwio.print({config, text: source, popts, printer});
 
           this.$set('error', '');
 
@@ -215,15 +216,15 @@
           var config = this.$get('config');
           var source = this.$get('source');
           var filename = this.$get('filename');
-          var cp = this.$get('shareDL');
+          var cp = this.$get('shareDL');  // csv/pdf
           var rows, data, resp;
           
           this.$set('error', '');
-          
+
           if (cp == 'C') {
             rows = App.utils.export.extractRowsFromTable({source});
             data = App.utils.export.makeCSVFromArray({rows});
-      
+console.log(rows)      
             App.utils.download.csv({data, filename: filename + '.csv'});
           }
           else {

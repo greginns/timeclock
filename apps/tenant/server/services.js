@@ -631,6 +631,7 @@ module.exports = {
         let wkno = Math.floor(day/7);
         let dayno = day % 7;
         let rate = getPayrate(ecode, wcode);
+        let method = rec['Workcode.method'];
 
         //if (wkno < 0 || wkno > 1) continue;
 
@@ -639,14 +640,12 @@ module.exports = {
         if (!(ecode in data[dcode].employees)) data[dcode].employees[ecode] = 
           {code: ecode, last: rec['Employee.last'], first: rec['Employee.first'], weeks: [0,0], reg: 0, ot: 0, total: 0, works: {}, work: []};
         if (!(wcode in data[dcode].employees[ecode].works)) {
-          data[dcode].employees[ecode].works[wcode] = {code: wcode, desc: rec['Workcode.desc'], method: rec['Workcode.method'], weeks: [{},{}]};
-          data[dcode].employees[ecode].works[wcode].weeks[0] = {days: [0,0,0,0,0,0,0], reg: 0, ot: 0, total: 0, tip: 0, biwkly: '', daily: 0, rate: rate.toFixed(2)}
-          data[dcode].employees[ecode].works[wcode].weeks[1] = {days: [0,0,0,0,0,0,0], reg: 0, ot: 0, total: 0, tip: 0, biwkly: 0, daily: 0, rate: rate.toFixed(2)};
+          data[dcode].employees[ecode].works[wcode] = {code: wcode, desc: rec['Workcode.desc'], method: method, weeks: [{},{}]};
+          data[dcode].employees[ecode].works[wcode].weeks[0] = {days: [0,0,0,0,0,0,0], reg: 0, ot: 0, total: 0, biwkly: '', daily: 0, rate: rate.toFixed(2)}
+          data[dcode].employees[ecode].works[wcode].weeks[1] = {days: [0,0,0,0,0,0,0], reg: 0, ot: 0, total: 0, biwkly: 0, daily: 0, rate: rate.toFixed(2)};
         }        
-        
-        // fill structure
-        let method = rec['Workcode.method'];
 
+        // fill structure
         rec.tippy = (method == 'T');
         data[dcode].employees[ecode].work.push(rec);
 
@@ -681,7 +680,9 @@ module.exports = {
           totals.total += rec.hours;
         }
         else {
-          data[dcode].employees[ecode].works[wcode].weeks[wkno].tip += rec.tip;
+          data[dcode].employees[ecode].works[wcode].weeks[wkno].days[dayno] += rec.tip;
+          data[dcode].employees[ecode].works[wcode].weeks[wkno].total += rec.tip;
+          data[dcode].employees[ecode].works[wcode].weeks[1].biwkly += rec.tip;
         }
       })
 
@@ -752,6 +753,10 @@ module.exports = {
         nj.addFilter('localTime', function(dt) {
           return moment(dt).format(timeFormat);
         })
+
+        nj.addFilter('dollars', function(amt) {
+          return parseFloat(amt).toFixed(2);
+        })
         
         tm.data = nj.render('rpt-payroll.html', {data: sorted, startDate: sdate.toLocaleDateString(), endDate: edate.toLocaleDateString(), totals});
         tm.type = 'html';
@@ -789,7 +794,6 @@ module.exports = {
     },
 
     get: async function({pgschema='', dept='', date = ''} = {}) {
-      var tm;
       var query = {
         Work: {
           columns: ['id','tip'],

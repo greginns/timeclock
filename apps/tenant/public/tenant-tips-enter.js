@@ -82,7 +82,7 @@ App.mvcObjs.tenant_tips_enter = {
 								<div class="input-group-prepend" mvc-on="{click: 'stepper:minus'}">
 									<div class="input-group-text">—</div>
 								</div>
-								<input type="text" min="0" max="999" step="1" class="form-control mvc-boot-input-right" mvc-edit="float" mvc-role="stepper" mvc-value="${emp.code}-${tip.code}"></input>
+								<input type="text" min="0" max="9999" step="1" class="form-control mvc-boot-input-right" mvc-edit="float" mvc-role="stepper" mvc-value="${emp.code}-${tip.code}"></input>
 								<div class="input-group-append" mvc-on="{click: 'stepper:plus'}">
 									<div class="input-group-text">+</div>
 								</div>					
