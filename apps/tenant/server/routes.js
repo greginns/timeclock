@@ -154,7 +154,7 @@ Router.add(new RouterMessage({
     rm.convertFromTravel(tm);
     return rm;
   }, 
-  options: {needLogin: true, needCSRF: true, redirect: ''}
+  options: {needLogin: true, needCSRF: true, redirect: '', allowAnon: true}
 }));
 
 Router.add(new RouterMessage({
@@ -220,7 +220,7 @@ Router.add(new RouterMessage({
     rm.convertFromTravel(tm);
     return rm;
   }, 
-  options: {needLogin: true, needCSRF: true, redirect: ''}
+  options: {needLogin: true, needCSRF: true, redirect: '', allowAnon: true}
 }));
 
 Router.add(new RouterMessage({
@@ -286,7 +286,7 @@ Router.add(new RouterMessage({
     rm.convertFromTravel(tm);
     return rm;
   }, 
-  options: {needLogin: true, needCSRF: true, redirect: ''}
+  options: {needLogin: true, needCSRF: true, redirect: '', allowAnon: true}
 }));
 
 Router.add(new RouterMessage({
@@ -643,7 +643,7 @@ Router.add(new RouterMessage({
     rm.convertFromTravel(tm);
     return rm;
   },
-  options: {needLogin: true, needCSRF: false}
+  options: {needLogin: true, needCSRF: false, allowAnon: true}
 }));
 
 Router.add(new RouterMessage({
@@ -669,7 +669,7 @@ Router.add(new RouterMessage({
     rm.convertFromTravel(tm);
     return rm;
   },
-  options: {needLogin: true, needCSRF: false}
+  options: {needLogin: true, needCSRF: false, allowAnon: true}
 }));
 
 Router.add(new RouterMessage({

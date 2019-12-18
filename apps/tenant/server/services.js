@@ -108,7 +108,6 @@ module.exports = {
       ctx.workcode = Workcode.getColumnDefns();
       ctx.dateFormat = dateFormat;
       ctx.timeFormat = timeFormat;
-      ctx.TID = req.TID;
       
       try {
         nj = nunjucks.configure([root + '/apps/tenant/public', root + '/apps', root + '/macros', root + '/mvc-addons'], { autoescape: true });
@@ -434,24 +433,35 @@ module.exports = {
   
   empclock: {
     login: async function(body) {
-      var match, emp, tm, user = 'Anonymous', pswd = 'herbie';
+      var match, emp, tm, ret, user = 'Anonymous', pswd = 'herbie', tenant = body.tenant;
       var CSRFToken;
+      var isMgr = false;
+      var query = {
+        Department: {
+          columns: ['code'],
+          where: 'WHERE "Department"."mgr" = $1 AND "Department"."active" = $2',
+        }
+      }
 
       // employee valid?
-      emp = await Employee.selectOne({pgschema: body.tenant, cols: ['first', 'last', 'password'], pks: body.username});
+      emp = await Employee.selectOne({pgschema: tenant, cols: ['first', 'last', 'password'], pks: body.username});
       if (emp.isBad()) return new TravelMessage({data: '', type: 'text', err: new InvalidUserError('Employee')});
 
       // password valid?
       match = await bcrypt.compare(body.password, emp.data.password);
       if (!match) return new TravelMessage({data: '', type: 'text', err: new InvalidUserError('Password')});
 
-      tm = await module.exports.auth.login({tenant: body.tenant, username: user, password: pswd});
+      tm = await module.exports.auth.login({tenant, username: user, password: pswd});
       if (tm.isBad()) return new TravelMessage({data: '', type: 'text', err: new InvalidUserError('User')});
 
-      CSRFToken = await makeCSRF(body.tenant, user);
+      CSRFToken = await makeCSRF(tenant, user);
+
+      ret = await jsonQueryExecify({query, group: 'tenant', pgschema: tenant, values: [body.username, true]});
+
+      isMgr = (!tm.isBad() && ret.data.length > 0);
       
       // Reply with name, and cookie from login
-      tm.data = {first: emp.data.first, last: emp.data.last, CSRFToken};
+      tm.data = {first: emp.data.first, last: emp.data.last, isMgr, CSRFToken};
       tm.type = 'json';
 
       return tm;

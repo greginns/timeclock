@@ -1,4 +1,4 @@
-App.mvcObjs.tenant_tips_enter = {
+App.mvcObjs.tenant_empclock_tips = {
   model: {
 		date: '',
 		dept: '',
@@ -120,11 +120,19 @@ App.mvcObjs.tenant_tips_enter = {
 		
 		getDepartments: function() {
 			var self = this;
+			var mgr = App.storage.employee;
+			var depts = [];
 			
 			io.get({}, '/tenant/department')
 			.then(function(res){
 				if (res.status == 200) {
-					self.$set('depts', res.data);
+					res.data.forEach(function(dept) {
+						if (dept.mgr == mgr) {
+							depts.push(dept);
+						}
+					})
+
+					self.$set('depts', depts);
 				}
 			})
 		},

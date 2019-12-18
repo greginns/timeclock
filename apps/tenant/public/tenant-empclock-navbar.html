@@ -8,15 +8,21 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
-        <li class="nav-item" id='tenant-empclock-navbar-payroll'>
-          <a class="nav-link" href="#clockin">Clock In/Out</a>
+        <li class="nav-item" id='tenant-empclock-navbar-clockin'>
+          <a class="nav-link" href="clockin">Clock In/Out</a>
+        </li>
+        <li class="nav-item" id='tenant-empclock-navbar-tips' mvc-show='this.$get("isMgr")'>
+          <a class="nav-link" href="tips">Tip Entry</a>
+        </li>
+        <li class="nav-item" id='tenant-empclock-navbar-payroll' mvc-show='this.$get("isMgr")'>
+          <a class="nav-link" href="payroll">Payroll</a>
         </li>
         <li class="nav-item">
           <span class="nav-link" mvc-on='{click: "logout"}' style='cursor: pointer'>Logout</span>
         </li>
       </ul>
       <span class="navbar-text">
-        {{TID}}
+        <span mvc-text='tenant'></span>
       </span>
     </div>
   </nav>
@@ -35,6 +41,7 @@
   <div class='row' mvc-show='!this.$get("loggedIn")'>
     <div class='col-12'>
       <div class="form-inline">
+        <input type='text' mvc-value='tenant' maxlength='20' mvc-on='{keyup: "key13"}' class='form-control mr-sm-2' placeholder='Tenant' />
         <input type='text' mvc-value='username' maxlength='20' mvc-on='{keyup: "key13"}' class='form-control mr-sm-2' placeholder='Employee ID' />
         <input type='password' mvc-value='password' mvc-on='{keyup: "key13"}' maxlength='20' class='form-control mr-sm-2' placeholder='Password' />
         <button class='btn btn-success mr-sm-2' mvc-on='{click: "login"}'>Login</button>
@@ -56,8 +63,10 @@
 
     var mvcObj = {
       model: {
+        tenant: '',
         username: '',
         password: '',
+        isMgr: false,
       },
 
       lifecycle: {
@@ -76,6 +85,17 @@
         },
 
         ready: function() {
+          var self = this;
+          var sch = location.search.substr(1);
+
+          sch.split('&').forEach(function(pair) {
+            if (pair.split('=')[0] == 'tenant') {
+              self.$set('tenant', pair.split('=')[1]);    
+            }
+          });
+        },
+
+        inView: function(params) {
         }
       },
 
@@ -88,12 +108,17 @@
 
         login: function() {
           var self = this;
-          var tenant = 'neoc';
+          var tenant = this.$get('tenant');
           var username = this.$get('username');
           var password = this.$get('password');
           
           App.subs.general.publish('loggedIn', false);
           
+          if (!tenant) {
+            App.modals.alert('Tenant is required');
+            return;
+          }
+
           if (!username) {
             App.modals.alert('Employee ID is required');
             return;
@@ -126,8 +151,12 @@
             Publish Logged In
           */
           io.CSRFToken = data.CSRFToken;
-          this.$set('empname', data.first + ' ' + data.last);
 
+          this.$set('empname', data.first + ' ' + data.last);
+          this.$set('isMgr', data.isMgr);
+
+          App.storage.isMgr = data.isMgr;
+          App.storage.tenant = this.$get('tenant');
           App.storage.employee = this.$get('username');
           App.storage.password = this.$get('password');
           App.subs.general.publish('loggedIn', true);
@@ -138,6 +167,7 @@
         },
         
         logout: function() {
+          this.$set('tenant', '');
           this.$set('username', '');
           this.$set('password', '');
           

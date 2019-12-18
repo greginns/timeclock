@@ -1,5 +1,5 @@
-<page id='tenant-tips-enter' style='display: none'>
-  <section id='tenant-tips-enter-section'>
+<page id='tenant-empclock-tips' style='display: none'>
+  <section id='tenant-empclock-tips-section'>
     <div mvc-show='this.$get("loggedIn")'>
       <div class='row form-group'>
         <div class='col-12 col-sm-4'>
@@ -63,12 +63,12 @@
   
   <script>
     (function() {
-      var page = $('#tenant-tips-enter');
-      var section = $('#tenant-tips-enter-section');
-      var path = '/enter';
+      var page = $('#tenant-empclock-tips');
+      var section = $('#tenant-empclock-tips-section');
+      var path = '/tips';
       var title = 'Tip Entry';
 
-      App.mvcs[section[0].id] = {mvcObj: App.mvcObjs.tenant_tips_enter, page: page, section: section, path: path, title: title};
+      App.mvcs[section[0].id] = {mvcObj: App.mvcObjs.tenant_empclock_tips, page: page, section: section, path: path, title: title};
     })();
   </script>
 </page>

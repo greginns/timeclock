@@ -13,6 +13,8 @@
   <script type="text/javascript">
     App.module = '/tenant/empclock/';
     {% include "./tenant-empclock-clockin.js" %}
+    {% include "./tenant-empclock-tips.js" %}
+    {% include "./tenant-empclock-payroll.js" %}
   </script>
 {% endblock %}
 
@@ -21,6 +23,8 @@
     <div id='mainPages'>
       {% include "./tenant-empclock-navbar.html" %}
       {% include "./tenant-empclock-clockin.html" %}
+      {% include "./tenant-empclock-tips.html" %}
+      {% include "./tenant-empclock-payroll.html" %}
       {% include "../../../mvc-addons/mvc-boot-cal.html" %}
       {% include "../../../mvc-addons/mvc-boot-time.html" %}
       {% include "../../../mvc-addons/mvc-modals.html" %}
