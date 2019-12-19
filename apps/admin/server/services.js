@@ -272,6 +272,10 @@ module.exports = {
       // create admin user 
       var user = new tenantUser({code: 'admin', name: 'Administrator', password: 'Admin49!', email: rec.email, active: true});
       tm = await user.insertOne({pgschema: rec.code});
+      
+      // create anonymous user 
+      var user = new tenantUser({code: 'Anonymous', name: 'Anonymous', password: 'herbie', email: rec.email, active: true});
+      tm = await user.insertOne({pgschema: rec.code});
 
       return tm;
     },
