@@ -1,0 +1,165 @@
+<page id='tenant-empclock-employees' style='display: none'>
+  <section id='tenant-empclock-employees-section'>
+		<div mvc-show='this.$get("loggedIn")'>
+			<div class='row form-group justify-content-center'>
+				<div class='col-12 col-sm-6'>
+					<select mvc-value='dept' mvc-each='depts' class='form-control'>
+						<option mvc-option='{text: "depts[$index].name", value: "depts[$index].code"}'></option>
+					</select>
+				</div>
+
+				<div class='col-12 col-sm-6'>
+					<select mvc-value='empPK' mvc-each='emps' class='form-control'>
+						<option mvc-option='{text: "emps[$index].name", value: "emps[$index].code"}'></option>
+					</select>
+				</div>
+			</div>
+			
+			<div class='row form-group justify-content-center'>
+				<div class='col-12'>
+					<div class='card'>
+						<div class='card-header'>
+							<h6>Pay Period Clock Ins</h6>
+						</div>
+						<div class='card-body'>
+							<table class='table table-sm table-responsive'>
+								<thead>
+									<tr>
+										<th>
+											Clock In Date
+										</th>
+										<th>
+											Clock In Time
+										</th>
+										<th>
+											Clock Out Date
+										</th>
+										<th>
+											Clock Out Time
+										</th>
+										<th>
+											Hours
+										</th>
+										<th>
+											Tip$
+										</th>
+										<!--th>
+											Pay
+										</th-->
+										<th>
+											Work
+										</th>
+										<th></th>
+										<th></th>
+									</tr>
+								</thead>
+								
+								<tbody mvc-each='works'>
+									<tr data-index='$index' style='line-height: 35px;'>
+										<td>
+											<div class='input-group'>
+												<input type="text" maxlength="10" mvc-value="works[$index].sdate|date['MM/DD/YYYY']" mvc-edit="date" mvc-event-type="blur" mvc-on='{blur: "calcHours", change: "calcHours", mvchange: "calcHours"}' class="form-control" />
+												<div class='input-group-append' mvc-on='{click: "date:bootcal"}'>
+													<div class="input-group-text">&#128197;</div>
+												</div>
+											</div>
+
+											<div mvc-show='this.$get("works[$index].errors.sdate")'>
+												<small class='text-danger' mvc-text='works[$index].errors.sdate'></small>
+											</div>
+										</td>
+										
+										<td>
+											<div class='input-group'>
+												<input type="text" maxlength="8" mvc-value="works[$index].stime|time['HH:mm a']" mvc-edit="time" mvc-event-type="blur" mvc-on='{blur: "calcHours", change: "calcHours", mvchange: "calcHours"}' class="form-control" />
+												<div class='input-group-append' mvc-on='{click: "time:bootcal"}'>
+													<div class="input-group-text">&#128338;</div>
+												</div>
+											</div>                    
+											<div mvc-show='this.$get("works[$index].errors.stime")'>
+												<small class='text-danger' mvc-text='works[$index].errors.stime'></small>
+											</div>
+										</td>
+										
+										<td>
+											<div class='input-group'>
+												<input type="text" maxlength="10" mvc-value="works[$index].edate|date['MM/DD/YYYY']" mvc-edit="date" mvc-event-type="blur" mvc-on='{blur: "calcHours", change: "calcHours", mvchange: "calcHours"}' class="form-control" />
+												<div class='input-group-append' mvc-on='{click: "date:bootcal"}'>
+													<div class="input-group-text">&#128197;</div>
+												</div>
+											</div>
+
+											<div mvc-show='this.$get("works[$index].errors.edate")'>
+												<small class='text-danger' mvc-text='works[$index].errors.edate'></small>
+											</div>
+										</td>
+										
+										<td>
+											<div class='input-group'>
+												<input type="text" maxlength="8" mvc-value="works[$index].etime|time['HH:mm a']" mvc-edit="time" mvc-event-type="blur" mvc-on='{blur: "calcHours", change: "calcHours", mvchange: "calcHours"}' class="form-control" />
+												<div class='input-group-append' mvc-on='{click: "time:bootcal"}'>
+													<div class="input-group-text">&#128338;</div>
+												</div>
+											</div>                   
+											<div mvc-show='this.$get("works[$index].errors.etime")'>
+												<small class='text-danger' mvc-text='works[$index].errors.etime'></small>
+											</div>                    
+										</td>
+										
+										<td>
+											<input type="text" min='.01' max='9999.99' step='.1' mvc-value='works[$index].hours' mvc-edit='float' mvc-on='{focus: "calcHours"}' class="form-control mvc-boot-input-right" />
+											<div mvc-show='this.$get("works[$index].errors.hours")'>
+												<small class='text-danger' mvc-text='works[$index].errors.hours'></small>
+											</div>                          
+										</td>
+										
+										<td>
+											<input type="text" min='1.00' max='9999.99' step='.1' mvc-value='works[$index].tip' mvc-edit='float' class="form-control mvc-boot-input-right" />
+											<div mvc-show='this.$get("works[$index].errors.tip")'>
+												<small class='text-danger' mvc-text='works[$index].errors.tip'></small>
+											</div>                          
+										</td>
+										
+										<!--td>
+											<input type="text" min='1.00' max='9999.99' step='.1' mvc-value='works[$index].pay' mvc-edit='float' class="form-control mvc-boot-input-right" />
+											<div mvc-show='this.$get("works[$index].errors.pay")'>
+												<small class='text-danger' mvc-text='works[$index].errors.pay'></small>
+											</div>                          
+										</td-->
+										
+										<td>
+											<select mvc-each='empworks' mvc-value='works[$index].workcode' mvc-index='$index2' class='form-control'>
+												<option mvc-option='{text: "empworks[$index2].desc", value: "empworks[$index2].workcode"}'></option>
+											</select>    
+											<div mvc-show='this.$get("works[$index].errors.workcode")'>
+												<small class='text-danger' mvc-text='works[$index].errors.workcode'></small>
+											</div>                          
+										</td>
+										
+										<td>
+											{{ buttons.btnsm(class='primary', mvc_click='grid.save', text='Save') }}
+										</td>
+										<td>
+											<span style='color: red; cursor: pointer' mvc-on='{click: "grid.delete"}'>&#x274C;</span>
+										</td>
+									</tr>
+								</tbody>
+							</table>            
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+  </section>
+  
+  <script>
+    (function() {
+      var page = $('#tenant-empclock-employees');
+      var section = $('#tenant-empclock-employees-section');
+      var path = '/employees';
+      var title = 'Employee';
+
+      App.mvcs[section[0].id] = {mvcObj: App.mvcObjs.tenant_empclock_employees, page: page, section: section, path: path, title: title};
+    })();
+  </script>
+</page>

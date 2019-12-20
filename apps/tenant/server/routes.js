@@ -111,7 +111,7 @@ Router.add(new RouterMessage({
     rm.convertFromTravel(tm);
     return rm;
   }, 
-  options: {needLogin: true, needCSRF: false, redirect: '/tenant'}
+  options: {needLogin: true, needCSRF: false, redirect: '/tenant', allowAnon: true}
 }));
 
 // empclock page
@@ -216,6 +216,19 @@ Router.add(new RouterMessage({
   fn: async function(req, res) {
     var rm = new ResponseMessage();
     var tm = await services.employee.get({pgschema: req.TID});
+  
+    rm.convertFromTravel(tm);
+    return rm;
+  }, 
+  options: {needLogin: true, needCSRF: true, redirect: '', allowAnon: true}
+}));
+
+Router.add(new RouterMessage({
+  method: 'get',
+  path: '/tenant/employee/department/:code', 
+  fn: async function(req, res) {
+    var rm = new ResponseMessage();
+    var tm = await services.employee.getByDept({pgschema: req.TID, dept: req.params.code});
   
     rm.convertFromTravel(tm);
     return rm;
@@ -352,7 +365,7 @@ Router.add(new RouterMessage({
     rm.convertFromTravel(tm);
     return rm;
   }, 
-  options: {needLogin: true, needCSRF: true, redirect: ''}
+  options: {needLogin: true, needCSRF: true, redirect: '', allowAnon: true}
 }));
 
 Router.add(new RouterMessage({
@@ -431,7 +444,7 @@ Router.add(new RouterMessage({
     rm.convertFromTravel(tm);
     return rm;
   }, 
-  options: {needLogin: true, needCSRF: true, redirect: ''}
+  options: {needLogin: true, needCSRF: true, redirect: '', allowAnon: true}
 }));
 
 Router.add(new RouterMessage({
@@ -444,7 +457,7 @@ Router.add(new RouterMessage({
     rm.convertFromTravel(tm);
     return rm;
   }, 
-  options: {needLogin: true, needCSRF: true, redirect: ''}
+  options: {needLogin: true, needCSRF: true, redirect: '', allowAnon: true}
 }));
 
 Router.add(new RouterMessage({
@@ -457,7 +470,7 @@ Router.add(new RouterMessage({
     rm.convertFromTravel(tm);
     return rm;
   }, 
-  options: {needLogin: true, needCSRF: true, redirect: ''}
+  options: {needLogin: true, needCSRF: true, redirect: '', allowAnon: true}
 }));
 
 // user

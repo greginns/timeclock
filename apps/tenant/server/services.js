@@ -279,6 +279,13 @@ module.exports = {
       return await Employee.select({pgschema, rec});
     },
 
+    getByDept: async function({pgschema = '', dept=''} = {}) {
+      // get one or more employees from a dept
+      var rec = {dept, active: true};
+
+      return await Employee.select({pgschema, rec});
+    },
+
     insert: async function({pgschema = '', rec = {}} = {}) {
       // Insert Record
       var tobj = new Employee(rec);
