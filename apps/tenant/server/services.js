@@ -53,6 +53,23 @@ const getAppConfig = async function(tenant) {
 
 module.exports = {
   output: {
+    main: async function() {
+      var ctx = {};
+      var nj;
+      var tm = new TravelMessage();
+      
+      try {
+        nj = nunjucks.configure([root + '/apps/tenant/public', root + '/apps', root + '/macros'], { autoescape: true });
+        tm.data = nj.render('tenant.html', ctx);
+        tm.type = 'html';
+      }  
+      catch(err) {
+        tm.err = new NunjucksError(err);
+      }
+      
+      return tm;
+    },
+
     manage: async function(req) {
       // main admin manage page.  Needs a user so won't get here without one
       var ctx = {};
@@ -126,6 +143,86 @@ module.exports = {
       return tm;
     },
     
+  },
+  auth: {
+    getUser: async function(req) {
+      var sess, tm, tenant = null, user = null;
+      var sessID = req.cookies.tenant_session || '';
+
+      if (sessID) {
+        sess = await Session.selectOne({pgschema, cols: '*', showHidden: true, pks: sessID});
+
+        if (!sess.err) {
+          tm = await Tenant.selectOne({pgschema, cols: '*', pks: sess.data.tenant});
+
+          if (tm.isGood()) {
+            tenant = tm.data;
+
+            tm = await User.selectOne({pgschema: tenant.code, cols: '*', pks: sess.data.user});
+            if (tm.isGood()) user = tm.data;
+          }
+        }
+      }
+
+      return [tenant, user];
+    },
+    
+    verifyCSRF: async function(req) {
+      // get token, check if user matches
+      var TID = req.TID;
+      var user = req.user;
+      var token = req.CSRFToken || null;
+      var tm;
+
+      if (!token) return false;
+
+      tm = await CSRF.selectOne({pgschema: TID, pks: token});
+      if (tm.err) return false;
+
+      return tm.data.user == user.code;    
+    },
+    
+    login: async function(body) {
+      // credentials good?
+      // create Session record 
+      // setup cookies
+      var match, tm, rec;
+
+      // tenant valid?
+      tm = await Tenant.selectOne({pgschema, cols: '', pks: body.tenant});
+      if (tm.err) return new TravelMessage({data: '', type: 'text', err: new InvalidUserError()});
+
+      // user valid?
+      tm = await User.selectOne({pgschema: body.tenant, cols: 'password', pks: body.username});
+      if (tm.err) return new TravelMessage({data: '', type: 'text', err: new InvalidUserError()});
+
+      // password valid?
+      match = await bcrypt.compare(body.password, tm.data.password);
+      if (!match) return new TravelMessage({data: '', type: 'text', err: new InvalidUserError()});
+      
+      // create session record
+      rec = new Session({id: uuidv1(), tenant: body.tenant, user: body.username});
+      tm = await rec.insertOne({pgschema});
+
+      if (tm.isBad()) return tm;
+     
+      // Reply with blank data not user record, include session as cookie
+      return new TravelMessage({data: '', type: 'text', status: 200, cookies: [{name: 'tenant_session', value: tm.data.id, path: '/', 'Max-Age': 60*60*24}]});  //, HttpOnly: true
+    },
+    
+    logout: async function(req) {
+      // delete session record
+      // remove cookie
+      var id = req.cookies.tenant_session || '';
+      var tobj;
+      
+      if (id) {
+        tobj = new Session({id});
+        await tobj.deleteOne({pgschema});
+      }
+      
+      return new TravelMessage({data: '/tenant', type: 'text', status: 200, cookies: [{name: 'tenant_session', value: ''}]});
+    },
   },
     
   query: async function(query) {
@@ -523,7 +620,7 @@ module.exports = {
       var edate = new Date(sdate); edate.setDate(edate.getDate()+days-1);
       var sql = jsonToQuery(query, 'tenant', pgschema, {});
       var stmt = {text: sql, values: [sdate, edate]};
-      var totals = {weeks: {0: 0, 1: 0}, reg:0, ot: 0, total: 0};
+      var totals = {weeks: {0: 0, 1: 0}, reg:0, ot: 0, total: 0, tips: 0, daily: 0};
 
       tm = await execQuery(stmt);
       if (tm.isBad()) return tm;
@@ -591,7 +688,10 @@ module.exports = {
           data[dcode].employees[ecode].works[wcode].weeks[wkno].total += rec.hours;
           data[dcode].employees[ecode].works[wcode].weeks[1].biwkly += rec.hours;
 
-          if (method == 'D' || method == 'F') data[dcode].employees[ecode].works[wcode].weeks[wkno].daily += 1;
+          if (method == 'D' || method == 'F') {
+            data[dcode].employees[ecode].works[wcode].weeks[wkno].daily += 1;
+            totals.daily += 1;
+          }
 
           totals.weeks[wkno] += rec.hours;
           totals.reg += reg;
@@ -602,6 +702,7 @@ module.exports = {
           data[dcode].employees[ecode].works[wcode].weeks[wkno].days[dayno] += rec.tip;
           data[dcode].employees[ecode].works[wcode].weeks[wkno].total += rec.tip;
           data[dcode].employees[ecode].works[wcode].weeks[1].biwkly += rec.tip;
+          totals.tip += rec.tip;
         }
       })
 

@@ -100,7 +100,7 @@
           return;
         }
         
-        io.post({tenant, username, password}, '/login/login')
+        io.post({tenant, username, password}, '/tenant/login')
         .then(function(res) {
           if (res.status == 200) {
             location = '/tenant/manage';
