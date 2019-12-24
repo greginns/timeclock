@@ -2,7 +2,7 @@
 <html lang=en style='height: 100%'>
   <head>
     <title>
-      Tenant Login
+      Login
     </title>
 
     <meta charset="utf-8">
@@ -100,7 +100,7 @@
           return;
         }
         
-        io.post({tenant, username, password}, '/tenant/login')
+        io.post({tenant, username, password}, '/login/login')
         .then(function(res) {
           if (res.status == 200) {
             location = '/tenant/manage';
