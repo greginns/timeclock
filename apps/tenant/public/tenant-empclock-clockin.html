@@ -1,7 +1,7 @@
 <page id='tenant-empclock-clockin' style='display: none'>
   <section id='tenant-empclock-clockin-section'>
     <div mvc-show='this.$get("loggedIn")'>
-      <div class='row form-group'>
+      <div class='row form-group' mvc-show='this.$get("openWork").length == 0'>
         <div class='col-12 col-sm-4'>
           <select id='empclock_workcode' mvc-value='workcode' mvc-each='empworks' class='form-control'>
             <option mvc-option = '{text: "empworks[$index].Workcode.desc", value: "empworks[$index].workcode", "payrate": "empworks[$index].payrate"}'></option>
@@ -9,6 +9,12 @@
         </div>
         <div class='col-12 col-sm-4'>
           {{ buttons.btn(class='primary', mvc_click='clockin', text='Clock In') }} 
+        </div>
+      </div>
+
+      <div class='row form-group' mvc-show='this.$get("openWork").length > 0'>
+        <div class='col-12 col-sm-4'>
+          {{ buttons.btn(class='primary', mvc_click='clockout', text='Clock Out') }} 
         </div>
       </div>
     

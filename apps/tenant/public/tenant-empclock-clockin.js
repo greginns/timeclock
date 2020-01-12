@@ -1,5 +1,7 @@
 App.mvcObjs.tenant_empclock_clockin = {
   model: {
+    openWork: [],
+
     defaults: {
     },
     
@@ -19,7 +21,7 @@ App.mvcObjs.tenant_empclock_clockin = {
         
         if (tf) {
           self.getEmpwork();  
-          self.getWork(true);
+          self.getWork();
         }
       });
 
@@ -61,7 +63,7 @@ App.mvcObjs.tenant_empclock_clockin = {
       .then(function(res) {
         if (res.status == 200) {
           self.clearIt();
-          self.getWork(false);
+          self.getWork();
         }
         else {
           self.displayErrors(res);
@@ -70,6 +72,21 @@ App.mvcObjs.tenant_empclock_clockin = {
       .finally(function() {
         App.modals.spinner.hide();
       })
+    },
+    
+    clockout: function() {
+      var self = this;
+      var openWork = this.$get('openWork');
+      var proms = [];
+
+      for (var pair of openWork) {
+        proms.push(io.post({}, '/tenant/empclock/clockout/' + pair[0] + '/' + pair[1]));
+      }
+
+      Promise.all(proms)
+      .then(function(res) {
+        self.getWork();
+      })      
     },
     
     clear: async function() {
@@ -100,10 +117,12 @@ App.mvcObjs.tenant_empclock_clockin = {
       })
     },
     
-    getWork: function(check) {
+    getWork: function() {
       var self = this;
+      var openWork = [];
+      var employee = App.storage.employee;
       
-      io.get({}, '/tenant/empclock/work/' + App.storage.employee)
+      io.get({}, '/tenant/empclock/work/' + employee)
       .then(function(res){
         if (res.status == 200) {
           res.data.forEach(function(d) {
@@ -112,30 +131,18 @@ App.mvcObjs.tenant_empclock_clockin = {
             d.tippy = parseFloat(d.tip) > 0;
           })
           
-          self.$set('works', res.data);
-          if (check) self.checkClockOuts();
-        }
-      })
-    },
-    
-    checkClockOuts: function() {
-      var self = this;
-      var works = this.$get('works');
-      var employee = App.storage.employee;
-      var proms = [];
-      
-      works.forEach(function(work) {
-        if (!work.edate) {
-          proms.push(io.post({}, '/tenant/empclock/clockout/' + employee + '/' + work.id))
-        }
-      });
+          res.data.forEach(function(work) {
+            if (!work.edate) {
+              openWork.push([employee, work.id]);
+            }            
+          })
 
-      Promise.all(proms)
-      .then(function(res) {
-        self.getWork(false);
+          self.$set('works', res.data);
+          self.$set('openWork', openWork);
+        }
       })
     },
-    
+
     setDefaults: function() {
       var dflts = this.$get('defaults.department');
       
