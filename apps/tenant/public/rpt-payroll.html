@@ -124,11 +124,11 @@
     <tr class='details'>
       <td>
         {{work.sdate | localDate}}
-        {% if work.tippy %} {% else %} {{work.sdate | localTime}} {% endif %}
+        {% if work.tippy %} {% else %} {{work.stime | timeHHMM}} {% endif %}
       </td>
       <td>
         {{work.edate | localDate}}
-        {% if work.tippy %} {% else %} {{work.edate | localTime}} {% endif %}
+        {% if work.tippy %} {% else %} {{work.etime | timeHHMM}} {% endif %}
       </td>
       <td class='text-right'>
         {% if work.tippy %} {% else %} {{work.hours}} {% endif %}
@@ -162,7 +162,7 @@
         Week 2:&nbsp;&nbsp;{{totals.weeks[1] | hhmm}}
       </td>
       <td colspan='6'>
-        Tips:&nbsp;&nbsp;{{totals.tip | dollars}} &nbsp;&nbsp;&nbsp;&nbsp;
+        Tips:&nbsp;&nbsp;{{totals.tips | dollars}} &nbsp;&nbsp;&nbsp;&nbsp;
         Daily:&nbsp;&nbsp;{{totals.daily | dollars}}
       </td>
       <td class='text-right'>

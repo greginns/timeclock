@@ -702,7 +702,7 @@ module.exports = {
           data[dcode].employees[ecode].works[wcode].weeks[wkno].days[dayno] += rec.tip;
           data[dcode].employees[ecode].works[wcode].weeks[wkno].total += rec.tip;
           data[dcode].employees[ecode].works[wcode].weeks[1].biwkly += rec.tip;
-          totals.tip += rec.tip;
+          totals.tips += rec.tip;
         }
       })
 
@@ -770,8 +770,8 @@ module.exports = {
           return moment(dt).format(dateFormat);
         });
 
-        nj.addFilter('localTime', function(dt) {
-          return moment(dt).format(timeFormat);
+        nj.addFilter('timeHHMM', function(tm) {
+          return tm.substr(0,5);
         })
 
         nj.addFilter('dollars', function(amt) {

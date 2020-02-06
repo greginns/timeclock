@@ -215,7 +215,12 @@ Router.add(new RouterMessage({
   path: '/tenant/employee', 
   fn: async function(req, res) {
     var rm = new ResponseMessage();
-    var tm = await services.employee.get({pgschema: req.TID});
+    var active = (req.query.active == 'Y') ? true : false;
+    var rec = {};
+
+    if (active) rec.active = active;
+
+    var tm = await services.employee.get({pgschema: req.TID, rec});
   
     rm.convertFromTravel(tm);
     return rm;

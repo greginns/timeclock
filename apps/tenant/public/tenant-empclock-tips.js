@@ -140,7 +140,7 @@ App.mvcObjs.tenant_empclock_tips = {
 		getEmployees: function() {
 			var self = this;
 			
-			io.get({}, '/tenant/employee')
+			io.get({active: 'Y'}, '/tenant/employee')
 			.then(function(res){
 				if (res.status == 200) {
 					self.$set('employees', res.data);
@@ -172,28 +172,38 @@ App.mvcObjs.tenant_empclock_tips = {
 			})
 		},
 
-		saveTips: function() {
+		saveTips: async function() {
 			var self = this;
 			var ids = this.$get('empTipIDs');
 			var emps = this.$get('employees');
 			var tips = this.$get('tipCodes');
 			var dept = this.$get('dept');
 
-			emps.forEach(function(emp) {
-				if (emp.dept == dept) {
-					tips.forEach(async function(work, idx) {
-						if (idx > 0) {
-							let key = emp.code + '-' + work.code;
-							let tip = self.$get(key);
-							let id = ids[key];
+			for (var empX=0; empX < emps.length; empX++) {
+				var emp = emps[empX];
 
-							if (tip != '') {
-								await self.saveTip2(dept, emp.code, work.code, tip, id);
+				if (emp.dept == dept) {
+					for (var tipX=1; tipX<tips.length; tipX++) {
+						var work = tips[tipX];
+						let key = emp.code + '-' + work.code;
+						let tip = self.$get(key);
+						let id = ids[key];
+
+						if (tip != '') {
+							let res = await self.saveTip2(dept, emp.code, work.code, tip, id);
+
+							if (res.status == 200) {
+								ids[key] = res.data.id;
 							}
-						}
-					})
-				}
-			})
+							else {
+								alert(emp.code + '\n' + res.data.errors.message);
+							}								
+						}						
+					}
+				}				
+			}
+
+			this.$set('empTipIDs', ids);
 		},
 
 		saveTip2: function(dept, emp, work, tip, id) {
@@ -212,15 +222,7 @@ App.mvcObjs.tenant_empclock_tips = {
 				params.date = dt;
 			} 
 
-			fn(params, url)
-			.then(function(res) {
-				if (res.status == 200) {
-					App.modals.alert('Saved');
-				}
-				else {
-					App.modals.alert(res.data.errors.message);
-				}
-			})
+			return fn(params, url);
 		},
 		
 		clearTips: function() {
