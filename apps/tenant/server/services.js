@@ -608,7 +608,10 @@ module.exports = {
             {Workcode: {columns: ['desc', 'method']}}
           ],
           where: 'WHERE "Work"."sdate" >= $1 AND "Work"."sdate" <= $2',
-          orderBy: [{Work: ['employee', 'sdate', 'stime', 'etime']}]
+          orderBy: [
+            {Employee: ['last', 'first']},
+            {Work: ['sdate', 'stime', 'etime']}
+          ]
         }
       };
 
