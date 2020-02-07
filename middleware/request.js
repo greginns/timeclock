@@ -111,7 +111,7 @@ function getMultipartBody(parts) {
 async function getBody(req) {
   var str = '', body = {}, files = [], boundary, parts, chunks = [], chunkLength = 0;
   //var decoder = new StringDecoder('utf-8');
-  var ct = req.headers['content-type'].toLowerCase();
+  var ct = (req.headers['content-type'] || "").toLowerCase();
   var aborted = false;
 
   return new Promise(function(resolve, reject) {
