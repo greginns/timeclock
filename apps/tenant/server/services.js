@@ -774,6 +774,8 @@ module.exports = {
         });
 
         nj.addFilter('timeHHMM', function(tm) {
+          tm = tm || '';
+          
           return tm.substr(0,5);
         })
 
