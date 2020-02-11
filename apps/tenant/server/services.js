@@ -571,7 +571,7 @@ module.exports = {
       return tm;
     },
     
-    run: async function({pgschema = ''}) {
+    run: async function({pgschema = '', mgr = ''}) {
       /*  for each dept 
           for each employee 
           organize work by workcode/date
@@ -602,7 +602,7 @@ module.exports = {
             {Employee: {
               columns: ['last', 'first'],
               innerJoin: [
-                {Department: {columns: ['code','name']}},
+                {Department: {columns: ['code', 'name', 'mgr']}},
               ]
             }},
             {Workcode: {columns: ['desc', 'method']}}
@@ -615,15 +615,22 @@ module.exports = {
         }
       };
 
+      var totals = {weeks: {0: 0, 1: 0}, reg:0, ot: 0, total: 0, tips: 0, daily: 0};
       var config = await getAppConfig(pgschema);
       var sdate = await getPayrollPeriodStart(pgschema);     
       var sdateM = moment(sdate);
       var days = parseInt(config.payroll.periodDays, 10);
       var maxHours = parseInt(config.payroll.weeklyHours, 10);
       var edate = new Date(sdate); edate.setDate(edate.getDate()+days-1);
+      var values = [sdate, edate];
+
+      if (mgr) {
+        query.Work.where += ' AND "Department"."mgr" = $3';
+        values.push(mgr);
+      }
+
       var sql = jsonToQuery(query, 'tenant', pgschema, {});
-      var stmt = {text: sql, values: [sdate, edate]};
-      var totals = {weeks: {0: 0, 1: 0}, reg:0, ot: 0, total: 0, tips: 0, daily: 0};
+      var stmt = {text: sql, values};
 
       tm = await execQuery(stmt);
       if (tm.isBad()) return tm;
@@ -775,7 +782,7 @@ module.exports = {
 
         nj.addFilter('timeHHMM', function(tm) {
           tm = tm || '';
-          
+
           return tm.substr(0,5);
         })
 

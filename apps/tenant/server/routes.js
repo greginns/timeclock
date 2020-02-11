@@ -681,8 +681,9 @@ Router.add(new RouterMessage({
   method: 'get',
   path: '/tenant/payroll/run', 
   fn: async function(req, res) {
+console.log(req.query.mgr)    
     var rm = new ResponseMessage();
-    var tm = await services.payroll.run({pgschema: req.TID});
+    var tm = await services.payroll.run({pgschema: req.TID, mgr: req.query.mgr || ''});
   
     rm.convertFromTravel(tm);
     return rm;

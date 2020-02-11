@@ -48,7 +48,7 @@ App.mvcObjs.tenant_empclock_payroll = {
 
       this.$set('details', true);
       
-      res = await io.get({}, '/tenant/payroll/run');
+      res = await io.get({mgr: App.storage.employee}, '/tenant/payroll/run');
       
       if (res.status == 200) {
 				this.$set('hasRun', true);
