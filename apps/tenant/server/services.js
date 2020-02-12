@@ -680,7 +680,7 @@ module.exports = {
           let reg=0, ot=0;
           
           if (data[dcode].employees[ecode].weeks[wkno] + rec.hours > maxHours) {
-            reg = maxHours - data[dcode].employees[ecode].weeks[wkno];
+            reg = Math.max(maxHours - data[dcode].employees[ecode].weeks[wkno], 0);
             ot = rec.hours - reg;
           }
           else {
