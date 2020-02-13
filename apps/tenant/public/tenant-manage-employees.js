@@ -392,7 +392,7 @@ App.mvcObjs.tenant_manage_employees = {
       var workcodes = this.$get('workcodes');
       var empcode = this.$get('employee.code');
       var dflt = function() {
-        return obj = {id: '', employee: empcode, sdate: '', stime: '', edate: '', etime: '', tip: '', workcode: ''};
+        return obj = {id: '', employee: empcode, sdate: '', stime: '', edate: '', etime: '', tip: '0', workcode: ''};
       };
       
       this.$set('grid.data', 'works');
