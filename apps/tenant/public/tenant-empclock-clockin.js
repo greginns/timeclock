@@ -132,7 +132,7 @@ App.mvcObjs.tenant_empclock_clockin = {
           })
           
           res.data.forEach(function(work) {
-            if (!work.edate) {
+            if (!work.etime) {
               openWork.push([employee, work.id]);
             }            
           })
