@@ -170,7 +170,7 @@ module.exports = function(buildOrRun) {
             sdate: new Fields.Date({notNull: true, verbose: 'Start Date'}),
             stime: new Fields.Time({notNull: true, verbose: 'Start Time'}),
             edate: new Fields.Date({null: true, verbose: 'End Date'}),
-            etime: new Fields.Time({null: true, test: fnDateTime, verbose: 'End Time'}),
+            etime: new Fields.Time({null: true, default: null, test: fnDateTime, verbose: 'End Time'}),
             hours: new Fields.Float({null: true, verbose: 'Hours Worked'}),
             tip: new Fields.Float({null: true, verbose: 'Tips'}),
           },
