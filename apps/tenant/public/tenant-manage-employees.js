@@ -101,8 +101,8 @@ App.mvcObjs.tenant_manage_employees = {
           $('#tenant-manage-employees-toast1').toast('show');
         
           if (!empPK) {
-            self.$set('empPK', res.data.employee, true);
-            self.$set('employee.code', res.data.employee);
+            self.$set('empPK', res.data.code, true);
+            self.$set('employee.code', res.data.code);
           }
 
           self.empworkGrid();
