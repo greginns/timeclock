@@ -1,36 +1,38 @@
 <page id='tenant-empclock-payroll' style='display: none'>
   <section id='tenant-empclock-payroll-section'>
-    <div class='row form-group'>
-      <div class='col-12 col-sm-6' mvc-show='this.$get("stype") == "C"'>
-        <div class='row form-group'>
-          <div class='col-12 col-sm-6'>
-            Payroll Review <span mvc-text='startDate'></span> - <span mvc-text='endDate'></span>
-					</div>
-					<div class='col-12 col-sm-6'>
-						<select mvc-value='dept' mvc-each='depts' class='form-control'>
-							<option mvc-option='{text: "depts[$index].name", value: "depts[$index].code"}'></option>
-						</select>
-					</div>
+    <div mvc-show='this.$get("loggedIn")'>
+      <div class='row form-group'>
+        <div class='col-12 col-sm-6' mvc-show='this.$get("stype") == "C"'>
+          <div class='row form-group'>
+            <div class='col-12 col-sm-6'>
+              Payroll Review <span mvc-text='startDate'></span> - <span mvc-text='endDate'></span>
+            </div>
+            <div class='col-12 col-sm-6'>
+              <select mvc-value='dept' mvc-each='depts' class='form-control'>
+                <option mvc-option='{text: "depts[$index].name", value: "depts[$index].code"}'></option>
+              </select>
+            </div>
+          </div>
+          
+          <div class='row form-group'>
+            <div class='col-3'>
+              {{ buttons.btn(class='primary', mvc_click='run', text='Run') }}
+            </div>
+            <div class='col-4' mvc-show='this.$get("hasRun")'>
+              <div class="custom-control custom-checkbox custom-control-inline">
+                <input type="checkbox" id="payDetail" mvc-checked='details' class="custom-control-input">
+                <label class="custom-control-label label-color" for="payDetail">Details</label>
+              </div>
+              {{ buttons.btn(class='success', mvc_click='share', text='Share') }}
+            </div>
+          </div>        
         </div>
-        
-        <div class='row form-group'>
-          <div class='col-3'>
-            {{ buttons.btn(class='primary', mvc_click='run', text='Run') }}
-					</div>
-					<div class='col-4' mvc-show='this.$get("hasRun")'>
-						<div class="custom-control custom-checkbox custom-control-inline">
-							<input type="checkbox" id="payDetail" mvc-checked='details' class="custom-control-input">
-							<label class="custom-control-label label-color" for="payDetail">Details</label>
-						</div>
-						{{ buttons.btn(class='success', mvc_click='share', text='Share') }}
-					</div>
-        </div>        
       </div>
-    </div>
-    
-    <div class='row form-group'>
-      <div class='col-12'>
-        <span mvc-html='report'></span>
+      
+      <div class='row form-group'>
+        <div class='col-12'>
+          <span mvc-html='report'></span>
+        </div>
       </div>
     </div>
     

@@ -134,7 +134,7 @@ App.mvcObjs.tenant_manage_employees = {
           self.$set('toastMessage', 'Employee Deleted');
           $('#tenant-manage-employees-toast1').toast('show');
           
-          self.clearit();
+          self.clearIt();
         }
         else {
           self.displayErrors(res);

@@ -535,7 +535,99 @@ module.exports = {
       return await tobj.updateOne({pgschema});
     },       
   },
-  
+
+  history: {
+    run: async function({pgschema = '',  emp='', sdate = '', edate = ''}) {
+      // get work data
+      var query = {
+        Work: {
+          columns: ['*'],
+          innerJoin: [
+            {Employee: {
+              columns: ['last', 'first'],
+              innerJoin: [
+                {Department: {columns: ['code', 'name']}},
+              ]
+            }},
+            {Workcode: {columns: ['desc', 'method']}}
+          ],
+          where: 'WHERE "Work"."sdate" >= $1 AND "Work"."sdate" <= $2 AND "Work"."employee" = $3',
+          orderBy: [
+            {Employee: ['last', 'first']},
+            {Work: ['sdate', 'stime', 'etime']}
+          ]
+        }
+      };
+
+      var values = [sdate, edate, emp]
+      var sql = jsonToQuery(query, 'tenant', pgschema, {});
+      var stmt = {text: sql, values};
+      var totals = {tips: 0, hours: 0};
+      var data = [], dcode, dname, ecode, ename;
+
+      tm = await execQuery(stmt);
+      if (tm.isBad()) return tm;
+
+      tm.data.forEach(function(rec, idx) {
+        if (idx == 0) {
+          dcode = rec['Department.code'];
+          dname = rec['Department.name'];
+          ecode = rec.employee;
+          ename = rec['Employee.last'] + ', ' + rec['Employee.first']
+        }
+
+        var obj = {};
+
+        obj.wcode = rec.workcode;
+        obj.wdesc = rec['Workcode.desc'];
+        obj.method = rec['Workcode.method'];
+        obj.sdate = rec.sdate;
+        obj.hours = rec.hours;
+        obj.tip = rec.tip;
+
+        data.push(obj);
+
+        totals.tips += rec.tip;
+        totals.hours += rec.hours;
+      });
+
+      // output!
+      tm = new TravelMessage();
+      
+      try {
+        var nj = nunjucks.configure([root + '/apps/tenant/public', root + '/apps', root + '/macros', root + '/mvc-addons'], { autoescape: true });
+        nj.addFilter('hhmm', function(dec) {
+          // convert decimal hours to hh:mm, ie 13.42 to 13:25
+          var mins = Math.floor((dec - Math.floor(dec)) * 60);
+          
+          return Math.floor(dec) + ':' + ('0' + mins).slice(-2);
+        });
+
+        nj.addFilter('localDate', function(dt) {
+          return moment(dt).format(dateFormat);
+        });
+
+        nj.addFilter('timeHHMM', function(tm) {
+          tm = tm || '';
+
+          return tm.substr(0,5);
+        })
+
+        nj.addFilter('dollars', function(amt) {
+          return parseFloat(amt).toFixed(2);
+        })
+        
+        tm.data = nj.render('rpt-history.html', {data, employee: ecode + ' - ' + ename, startDate: (new Date(sdate)).toLocaleDateString(), endDate: (new Date(edate)).toLocaleDateString(), totals});
+        tm.type = 'html';
+      }  
+      catch(err) {
+        tm.err = tm.err = new NunjucksError(err);
+      }
+      
+      return tm;
+    }
+  },
+
   payroll: {
     getParams: async function({pgschema} = {}) {
       var config = await getAppConfig(pgschema);

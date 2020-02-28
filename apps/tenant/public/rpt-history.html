@@ -1,0 +1,36 @@
+<table class='table table-sm'>
+  <thead>
+    <tr>
+      <th>
+        Employee {{employee}}
+      </th>
+      <th>
+        Work History {{startDate}} - {{endDate}}
+      </th>
+    </tr>
+
+    <tr>
+      <th class='text-left'>Date</th>
+      <th class='text-left'>Work code</th>
+      <th class='text-right'>Hours</th>
+      <th class='text-right'>Tips</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for info in data %}
+    <tr>
+      <td>{{info.sdate|localDate}}</td>
+      <td>{{info.wcode}} - {{info.wdesc}}</td>
+      <td class='text-right'>{{info.hours}}</td>
+      <td class='text-right'>{{info.tip}}</td>
+    </tr>
+    {% endfor %}
+    <tr>
+      <td></td>
+      <td></td>
+      <td class='text-right'>{{totals.hours}}</td >
+      <td class='text-right'>{{totals.tips}}</td>
+    </tr>
+  </tbody>
+</table>

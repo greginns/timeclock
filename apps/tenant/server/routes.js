@@ -710,6 +710,20 @@ Router.add(new RouterMessage({
   options: {needLogin: true, needCSRF: false}
 }));
 
+// History
+Router.add(new RouterMessage({
+  method: 'get',
+  path: '/tenant/history/run', 
+  fn: async function(req, res) {
+    var rm = new ResponseMessage();
+    var tm = await services.history.run({pgschema: req.TID, emp: req.query.emp, sdate: req.query.sdate, edate: req.query.edate});
+  
+    rm.convertFromTravel(tm);
+    return rm;
+  },
+  options: {needLogin: true, needCSRF: false, allowAnon: true}
+}));
+
 // reports
 Router.add(new RouterMessage({
   method: 'get',
