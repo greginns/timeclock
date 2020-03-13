@@ -497,7 +497,7 @@ Router.add(new RouterMessage({
   path: '/tenant/user', 
   fn: async function(req, res) {
     var rm = new ResponseMessage();
-    var tm = await services.user.insert({pgschema: req.TID, rec: req.body.workcode});
+    var tm = await services.user.insert({pgschema: req.TID, rec: req.body.user});
 
     rm.convertFromTravel(tm);
     return rm;
