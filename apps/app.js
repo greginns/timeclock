@@ -175,7 +175,7 @@ App.classes.WSDataComm = class {
     this.host = (location.protocol == 'https:') ? 'wss:' : 'ws:';
     this.host += `//${location.host}/${system}`;
     this.retries = 0;
-    this.retryMax = 10;
+    this.retryMax = 30;
     this.tables = [];
     this.subsets = [];
   }
