@@ -110,7 +110,7 @@ module.exports = {
       ctx.timeFormat = timeFormat;
       
       try {
-        nj = nunjucks.configure([root + '/apps/tenant/public', root + '/apps', root + '/macros', root + '/mvc-addons'], { autoescape: true });
+        nj = nunjucks.configure([root + '/apps/tenant/public', root + '/apps', root + '/macros', root + '/mvc-addons', root + '/lib/utils'], { autoescape: true });
         tm.data = nj.render('tenant-empclock.html', ctx);
         tm.type = 'html';
       }  
@@ -595,7 +595,7 @@ module.exports = {
       tm = new TravelMessage();
       
       try {
-        var nj = nunjucks.configure([root + '/apps/tenant/public', root + '/apps', root + '/macros', root + '/mvc-addons'], { autoescape: true });
+        var nj = nunjucks.configure([root + '/apps/tenant/public'], { autoescape: true });
         nj.addFilter('hhmm', function(dec) {
           // convert decimal hours to hh:mm, ie 13.42 to 13:25
           var mins = Math.floor((dec - Math.floor(dec)) * 60);
@@ -860,7 +860,7 @@ module.exports = {
       tm = new TravelMessage();
       
       try {
-        var nj = nunjucks.configure([root + '/apps/tenant/public', root + '/apps', root + '/macros', root + '/mvc-addons'], { autoescape: true });
+        var nj = nunjucks.configure([root + '/apps/tenant/public'], { autoescape: true });
         nj.addFilter('hhmm', function(dec) {
           // convert decimal hours to hh:mm, ie 13.42 to 13:25
           var mins = Math.floor((dec - Math.floor(dec)) * 60);
