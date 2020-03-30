@@ -39,6 +39,11 @@
 
 {% block init %}
 <script type="text/javascript">
+  {% include "../../../lib/utils/object.js" %}
+  {% include "../../../lib/utils/nwio.js" %}
+  {% include "../../../lib/utils/download.js" %}
+  {% include "../../../lib/utils/export.js" %}
+  {% include "../../../lib/utils/ee.js" %}
   {% include "./tenant-empclock.js" %}
 </script>
 {% endblock %}
