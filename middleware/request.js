@@ -184,6 +184,8 @@ function splitBuffer(buff, bound) {
 module.exports = {
   process: async function(req, res) {
     req.parsedURL = urlParse(req.url, true);
+    req.parsedURL.path = decodeURIComponent(req.parsedURL.path);
+    req.parsedURL.pathname = decodeURIComponent(req.parsedURL.pathname);
     req.cookies = cookieParse(req);
     req.CSRFToken = req.headers['x-csrf-token'];
     req.query = req.parsedURL.query;
