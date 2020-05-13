@@ -77,7 +77,7 @@ App.mvcObjs.tenant_manage_workcodes = {
         }
       }      
 
-      ((workPK) ? io.put({workcode: diffs}, url + '/' + workPK) : io.post({workcode: work}, url))
+      ((workPK) ? io.put({workcode: diffs}, url + '/' + encodeURIComponent(workPK)) : io.post({workcode: work}, url))
       .then(function(res) {
         if (res.status == 200) {
           self.$set('toastMessage', 'Workcode Saved');
