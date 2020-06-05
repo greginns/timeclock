@@ -33,6 +33,10 @@ App.mvcObjs.tenant_manage_employees = {
       var self = this;
       
       App.subs.data.subscribe('/tenant/employee', function(data) {
+        for (let d of data) {
+          if (!d.active) d.class = 'text-danger';
+        }
+
         self.$set('employees', data);
       })
 

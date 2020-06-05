@@ -26,7 +26,7 @@ module.exports = {
     if (!csrf) throw new ResponseMessage({status: 500, err: new SystemError('No sys/csrf Route Specified')});
 
     [tenant, user] = await auth.fn(req, res);
-console.log(user, options)
+
     if (!user) {
       if (options.needLogin) {
         if (options.redirect) {

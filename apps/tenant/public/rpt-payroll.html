@@ -64,7 +64,7 @@
 		{% endif %}
       {% if workInfo.method != 'T' %}
       <td></td>
-      <td>{% if loop.first %} {{workInfo.code}} {% else %} {{workInfo.desc}} {% endif %}</td>
+      <td>{% if loop.first %} <b> {{workInfo.code}} {% else %} {{workInfo.desc}} </b> {% endif %}</td>
       <td class='text-right'>{{weekInfo.days[0] | hhmm}}</td>
       <td class='text-right'>{{weekInfo.days[1] | hhmm}}</td>
       <td class='text-right'>{{weekInfo.days[2] | hhmm}}</td>

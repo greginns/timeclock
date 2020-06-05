@@ -16,7 +16,7 @@
             <div class='row'>
               <div class='col-12'>
                 <select mvc-each='employees' mvc-value='empPK' class='form-control' size='10' style='width: 100%'>
-                  <option mvc-option='{text: "employees[$index].name", value: "employees[$index].code"}'></option>
+                  <option mvc-option='{text: "employees[$index].name", value: "employees[$index].code", class: "employees[$index].class"}'></option>
                 </select>
               </div>
             </div>
