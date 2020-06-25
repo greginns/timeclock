@@ -224,7 +224,8 @@
           if (cp == 'C') {
             rows = App.utils.export.extractRowsFromTable({source});
             data = App.utils.export.makeCSVFromArray({rows});
-console.log(rows)      
+console.log(rows)
+console.log(data)      
             App.utils.download.csv({data, filename: filename + '.csv'});
           }
           else {
