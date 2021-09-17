@@ -185,7 +185,7 @@
           this.$set('email.subject', '');
           this.$set('email.message', '');
           this.$set('email.share', 'C');
-          this.$set('email.from', config.ee.from || config.ee.email);
+          this.$set('email.from', ('ee' in config) ? (config.ee.from || config.ee.email || '') : '');
           this.$set('error', '');
 
           this.getPrinters();
@@ -224,8 +224,7 @@
           if (cp == 'C') {
             rows = App.utils.export.extractRowsFromTable({source});
             data = App.utils.export.makeCSVFromArray({rows});
-console.log(rows)
-console.log(data)      
+      
             App.utils.download.csv({data, filename: filename + '.csv'});
           }
           else {

@@ -568,6 +568,13 @@ module.exports = {
       tm = await execQuery(stmt);
       if (tm.isBad()) return tm;
 
+      if (tm.data.length == 0) {
+        tm.data = '<h4>No Entries Found</h4>';
+        tm.type = 'html'
+
+        return tm;
+      }
+
       tm.data.forEach(function(rec, idx) {
         if (idx == 0) {
           dcode = rec['Department.code'];

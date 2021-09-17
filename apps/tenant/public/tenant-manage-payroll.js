@@ -9,8 +9,10 @@ App.mvcObjs.tenant_manage_payroll = {
   lifecycle: {
     created: function() {
       var self = this;
-      
+      this.startUp();
+
       return new Promise(function(resolve) {
+        
         resolve();  
       })
     },
@@ -20,8 +22,6 @@ App.mvcObjs.tenant_manage_payroll = {
 
     inView: async function(params) {
       var self = this;
-      
-      this.startUp();
 
       $('#tenant-manage-navbar-payroll').addClass('active disabled');
       $('#tenant-manage-payroll-toast1').toast('hide');
@@ -163,7 +163,7 @@ App.mvcObjs.tenant_manage_history = {
     created: function() {
       var self = this;
 			this.getDepartments();
-			
+      this.startUp();
       return new Promise(function(resolve) {
         resolve();  
       })
@@ -175,7 +175,7 @@ App.mvcObjs.tenant_manage_history = {
     inView: async function(params) {
       var self = this;
       
-      this.startUp();
+      
     },
 
     outView: function() {
@@ -185,8 +185,8 @@ App.mvcObjs.tenant_manage_history = {
   controllers: {
     run: async function() {
       var emp = this.$get('emp');
-      var sdate = this.$get('sdate');
-      var edate = this.$get('edate');
+      var sdate = this.$get('sdatex');
+      var edate = this.$get('edatex');
       
       var res = await io.get({emp, sdate, edate}, '/tenant/history/run');
       

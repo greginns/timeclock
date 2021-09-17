@@ -116,7 +116,7 @@
         <div class='row form-group'>
           <div class='col-4'>
             <div class='input-group'>
-              <input type="text" maxlength="10" mvc-value="sdate|date['MM/DD/YYYY']" mvc-edit="date" mvc-event-type="blur"
+              <input type="text" maxlength="10" mvc-value="sdatex|date['MM/DD/YYYY']" mvc-edit="date" mvc-event-type="blur"
                 class="form-control" placeholder='Start Date' />
               <div class='input-group-append' mvc-on='{click: "date:bootcal"}'>
                 <div class="input-group-text">&#128197;</div>
@@ -125,7 +125,7 @@
           </div>
           <div class='col-4'>
             <div class='input-group'>
-              <input type="text" maxlength="10" mvc-value="edate|date['MM/DD/YYYY']" mvc-edit="date" mvc-event-type="blur"
+              <input type="text" maxlength="10" mvc-value="edatex|date['MM/DD/YYYY']" mvc-edit="date" mvc-event-type="blur"
                 class="form-control" placeholder='End Date' />
               <div class='input-group-append' mvc-on='{click: "date:bootcal"}'>
                 <div class="input-group-text">&#128197;</div>
@@ -156,14 +156,13 @@
   <script>
     (function () {
       var page = $('#tenant-manage-payroll');
-      var section = $('#tenant-manage-payroll-section');
       var path = '/payroll';
       var title = 'Payroll';
 
+      var section = $('#tenant-manage-payroll-section');
       App.mvcs[section[0].id] = { mvcObj: App.mvcObjs.tenant_manage_payroll, page: page, section: section, path: path, title: title };
 
       var section = $('#tenant-manage-history-section');
-
       App.mvcs[section[0].id] = { mvcObj: App.mvcObjs.tenant_manage_history, page: page, section: section, path: path, title: title };
     })();
   </script>
